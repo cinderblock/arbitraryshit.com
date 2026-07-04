@@ -47,9 +47,10 @@ effort. Cadence ~weekly.
 - [x] RSS feed generation (`scripts/generate-feed.ts` → `build/client/feed.xml`)
 - [x] Playwright tests — 11 passing (chromium)
 - [x] fmt / typecheck / build green locally
-- [ ] Create GitHub repo cinderblock/arbitraryshit.com, push ← current
-- [ ] Stage ops change (pages block in arbitraryshit.yaml), show diff, WAIT for consent
-- [ ] After consent + ops applied: verify CF Pages build, custom domain, DNS
+- [x] Create GitHub repo cinderblock/arbitraryshit.com, push (public, master)
+- [x] Stage ops change (pages block in arbitraryshit.yaml) — edited in ops working tree, `bun run validate` passes, NOT committed/pushed ← waiting for user consent
+- [ ] After consent: user (or authorized session) commits+pushes ops; CI sync creates Pages project + apex CNAME
+- [ ] Verify CF Pages build, custom domain, DNS, feed.xml live
 
 ## Findings / gotchas
 
@@ -64,7 +65,7 @@ effort. Cadence ~weekly.
 
 ## Open questions for the user
 
-1. Apex DNS: replace `cinderblock.hyper.media` CNAME with the Pages CNAME, or keep and use a different arrangement? (Recommendation: Pages takes the apex; the hyper.media experiment moves to a subdomain if still wanted.)
+1. Ops consent: OK to commit+push the staged `arbitraryshit.yaml` change? It adds the Pages project (git-connected build of cinderblock/arbitraryshit.com) and **replaces the apex CNAME to `cinderblock.hyper.media`** ("I fixed the internet", ttl 60) with the Pages apex CNAME. The old record is left commented in the file. If hyper.media should survive, it needs a subdomain instead.
 
 ## Things not to do
 
