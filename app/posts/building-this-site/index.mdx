@@ -1,0 +1,65 @@
+---
+title: "Building This Site"
+date: "2026-07-04"
+description: "A bespoke static blog stack: React Router prerendering, MDX posts as folders, and interactive components — no framework-of-the-month."
+---
+
+import { ArbitraryNumber } from "./arbitrary-number";
+import pipeline from "./pipeline.svg";
+
+I had a domain sitting around and a pile of little projects with nowhere to
+live. So: a blog. This first post is mostly here to prove the plumbing works —
+text, pictures, source code, and interactive bits.
+
+## The stack
+
+Nothing off the shelf. It's my own `ssg-base` template — React Router in SPA
+mode with every route prerendered to static HTML at build time — plus an MDX
+layer for posts. Bun runs the show, Cloudflare Pages builds and hosts it on
+every push.
+
+Each post is just a folder:
+
+```
+app/posts/building-this-site/
+  index.mdx           — this file
+  pipeline.svg        — images live next to the words
+  arbitrary-number.tsx — interactive components too
+```
+
+The whole "post registry" is one glob import plus a tiny Vite virtual module
+that reads frontmatter off the filesystem:
+
+```ts
+// Metadata comes from a virtual module (filesystem enumeration at build
+// time), so the home page never pulls in post bodies.
+import { posts } from "virtual:posts-meta";
+
+// Post bodies are only ever imported dynamically — each post (and any
+// interactive components it drags along) is its own chunk.
+const bodies = import.meta.glob<{ default: ComponentType }>(
+  "../posts/*/index.mdx",
+);
+```
+
+Everything flows one direction:
+
+<img
+  src={pipeline}
+  alt="Build pipeline: MDX posts through Vite and React Router prerender to static HTML on Cloudflare Pages"
+/>
+
+## Interactive bits
+
+Posts can import React components that hydrate in the browser. Here's the
+site's namesake, an arbitrary number generator:
+
+<ArbitraryNumber />
+
+That's a plain `.tsx` file sitting in the post's folder. No shortcodes, no
+plugin API — it's just a component.
+
+## Writing workflow
+
+There is none, which is the point. Make a folder, write markdown, commit,
+push. Cloudflare builds it. See you next week, probably.

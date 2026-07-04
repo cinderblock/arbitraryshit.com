@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 120" font-family="system-ui,sans-serif" font-size="16">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7a7a90"/>
+    </marker>
+  </defs>
+  <g>
+    <rect x="10" y="30" width="150" height="60" rx="10" fill="#2563eb"/>
+    <text x="85" y="55" text-anchor="middle" fill="#fff" font-weight="600">app/posts/*/</text>
+    <text x="85" y="76" text-anchor="middle" fill="#cfe0ff" font-size="13">.mdx + .tsx + images</text>
+  </g>
+  <line x1="164" y1="60" x2="206" y2="60" stroke="#7a7a90" stroke-width="2" marker-end="url(#arrow)"/>
+  <g>
+    <rect x="210" y="30" width="150" height="60" rx="10" fill="#7c3aed"/>
+    <text x="285" y="55" text-anchor="middle" fill="#fff" font-weight="600">Vite + MDX</text>
+    <text x="285" y="76" text-anchor="middle" fill="#e3d5ff" font-size="13">shiki, frontmatter</text>
+  </g>
+  <line x1="364" y1="60" x2="406" y2="60" stroke="#7a7a90" stroke-width="2" marker-end="url(#arrow)"/>
+  <g>
+    <rect x="410" y="30" width="150" height="60" rx="10" fill="#059669"/>
+    <text x="485" y="55" text-anchor="middle" fill="#fff" font-weight="600">React Router</text>
+    <text x="485" y="76" text-anchor="middle" fill="#c9f2e3" font-size="13">prerender → HTML</text>
+  </g>
+  <line x1="564" y1="60" x2="606" y2="60" stroke="#7a7a90" stroke-width="2" marker-end="url(#arrow)"/>
+  <g>
+    <rect x="610" y="30" width="140" height="60" rx="10" fill="#ea580c"/>
+    <text x="680" y="55" text-anchor="middle" fill="#fff" font-weight="600">CF Pages</text>
+    <text x="680" y="76" text-anchor="middle" fill="#ffdcc4" font-size="13">build + host</text>
+  </g>
+</svg>
