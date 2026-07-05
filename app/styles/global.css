@@ -255,6 +255,77 @@ a:focus-visible {
   padding: 2rem 0 3rem;
 }
 
+/* Repo card (GitHub project link + live-ish stats) */
+
+.repo-card {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  padding: 0.875rem 1.125rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.repo-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.repo-card-title svg {
+  flex-shrink: 0;
+  color: var(--color-text);
+}
+
+.repo-card-stats {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  font-size: 0.875rem;
+}
+
+.repo-card-stats a {
+  color: var(--color-text-muted);
+}
+
+.repo-card-stats a:hover {
+  color: var(--color-primary);
+}
+
+.repo-card-pin {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+/* Related posts */
+
+.related {
+  border-top: 1px solid var(--color-border);
+  padding-top: 1.5rem;
+}
+
+.related h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.related ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.related time {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
 /* Code */
 
 code {

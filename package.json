@@ -10,6 +10,7 @@
     "test:ui": "playwright test --ui",
     "fmt": "oxfmt --write .",
     "fmt:check": "oxfmt --check .",
+    "refresh:github": "bun scripts/refresh-github-stats.ts",
     "typecheck": "react-router typegen && tsc",
     "prepare": "lefthook install"
   },

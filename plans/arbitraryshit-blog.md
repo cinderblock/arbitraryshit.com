@@ -38,6 +38,9 @@ Scaling invariant: every page view downloads O(1) data regardless of post count 
 - `app/lib/posts.ts` — client side: lazy `import.meta.glob` of post bodies → one chunk per post, fetched on view
 - `react-router.config.ts` — `prerender()` → `/` + `/posts/<slug>` (drafts excluded)
 - Permalinks: `/posts/<folder-name>` prerendered HTML; canonical + og:url from `app/lib/site.ts` (single URL constant, also used by feed); `rehype-slug` gives headings anchor ids for #section deep links
+- Repo cards: frontmatter `github: owner/repo` or `{repo, commit}` (full 40-char sha) → auto card under title (stars/issues/PRs/contributors + "N commits since" vs pin). Data: committed `data/github-stats.json`, written by `scripts/refresh-github-stats.ts` (GitHub REST; open_issues_count minus PR search count; contributors via Link-header pagination; compare pin...default_branch for ahead_by). Daily cron workflow `refresh-github-stats.yml` commits only when numbers change (fetchedAt ignored in the diff) → CF Pages rebuild refreshes static pages. GITHUB_TOKEN pushes don't retrigger Actions but DO trigger CF Pages (separate GitHub App).
+- Related posts: frontmatter `related: [slugs]`, symmetric (backlinks computed in loader). Unknown slug = build error; draft slug = silently skipped until published.
+- `app/posts/post-template/` — permanent draft: authoring template + dev-only test fixture for drafts/related/repo-card shorthand.
 - Syntax highlighting: `@shikijs/rehype` at MDX compile time (zero client JS)
 - Interactive elements: plain TSX components imported by the MDX, hydrated client-side
 - RSS: `scripts/generate-feed.ts` in `bun run build`, capped at 20 newest
@@ -66,6 +69,9 @@ Scaling invariant: every page view downloads O(1) data regardless of post count 
 - With `ssr: false` + `prerender`, route `loader`s still run at build time for prerendered paths — but we avoid loaders entirely (no `.data` fetch failures on unknown paths); post meta comes from the statically-bundled registry.
 - Eager `import.meta.glob(..., { import: "frontmatter" })` triggers `INEFFECTIVE_DYNAMIC_IMPORT`: the static import drags every post body into the main chunk. Never statically import MDX modules. (First fixed with a `virtual:posts-meta` vite plugin; replaced 2026-07-04 with build-time route loaders after user flagged bundle growth — loaders are simpler AND keep metadata out of JS entirely. Verified by grepping `build/client/assets/*.js` for frontmatter text: zero hits.)
 - RR 8 meta functions receive `loaderData`, not `data` (v7 name).
+- With `ssr:false`, loaders only serve paths in the prerender list — and dev enforces it (`SingleFetchNoResultError: No result found for routeId`). Draft posts must therefore be in the prerender list in dev (`NODE_ENV === "development"` branch in react-router.config.ts) even though they're excluded from builds.
+- Root ErrorBoundary logs the underlying error (`console.error("Route error:", ...)`) — it was silently swallowing errors, which made the above brutal to diagnose.
+- Editorial policy for published posts lives in CLAUDE.md (repo root): formatting edits free; content edits need Cameron's per-edit call on disclosed-vs-silent revision.
 - ssg-base has no `vite-tsconfig-paths`, so the `~/*` tsconfig alias fails at runtime in dev — use relative imports in app code.
 - Cold dev server: first MDX+shiki compile can exceed RR's SSR stream timeout → "render was aborted" noise + late client re-render. Harmless (build prerender is complete/fine), but interaction tests must retry clicks until hydration attaches handlers (see `tests/home.spec.ts` "hydrates interactive components").
 - YAML parses unquoted `date: 2026-07-04` as a Date object; `scripts/posts-fs.ts` normalizes to string, and post frontmatter uses quoted dates by convention.

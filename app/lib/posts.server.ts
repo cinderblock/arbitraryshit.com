@@ -15,3 +15,47 @@ export function listPosts(): PostMeta[] {
 export function getPost(slug: string): PostMeta | undefined {
   return listPosts().find((post) => post.slug === slug);
 }
+
+export interface RelatedPost {
+  slug: string;
+  title: string;
+  date: string;
+  description: string;
+}
+
+/**
+ * Related posts for a post: its explicit `related:` list first, then
+ * backlinks (posts whose `related:` lists this one), newest first.
+ *
+ * A slug that doesn't exist at all is a build error (catches typos at
+ * prerender time). A slug that exists but is draft-filtered is silently
+ * skipped — the link appears once that post is published.
+ */
+export function getRelatedPosts(post: PostMeta): RelatedPost[] {
+  const visible = listPosts();
+  const bySlug = new Map(visible.map((p) => [p.slug, p]));
+  const allSlugs = new Set(readPostsFromFs().map((p) => p.slug));
+
+  for (const slug of post.related) {
+    if (!allSlugs.has(slug)) {
+      throw new Error(
+        `Post "${post.slug}" lists unknown related post "${slug}"`,
+      );
+    }
+  }
+
+  const backlinks = visible
+    .filter((p) => p.slug !== post.slug && p.related.includes(post.slug))
+    .map((p) => p.slug);
+
+  const slugs = [...new Set([...post.related, ...backlinks])].filter(
+    (slug) => slug !== post.slug,
+  );
+
+  return slugs.flatMap((slug) => {
+    const related = bySlug.get(slug);
+    if (!related) return [];
+    const { title, date, description } = related;
+    return [{ slug, title, date, description }];
+  });
+}

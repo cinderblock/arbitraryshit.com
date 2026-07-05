@@ -1,8 +1,10 @@
 import type { ComponentType, LazyExoticComponent } from "react";
 import { lazy, Suspense } from "react";
 import { Link } from "react-router";
+import { RepoCard } from "../components/repo-card";
+import { getRepoCard } from "../lib/github.server";
 import { formatDate, getPostBody } from "../lib/posts";
-import { getPost } from "../lib/posts.server";
+import { getPost, getRelatedPosts } from "../lib/posts.server";
 import { postUrl } from "../lib/site";
 import type { Route } from "./+types/post";
 
@@ -25,7 +27,11 @@ function loadBody(slug: string) {
 export function loader({ params }: Route.LoaderArgs) {
   const post = getPost(params.slug);
   if (!post) throw new Response("Not Found", { status: 404 });
-  return { post };
+  return {
+    post,
+    github: getRepoCard(post),
+    related: getRelatedPosts(post),
+  };
 }
 
 export const meta: Route.MetaFunction = ({ loaderData }) => {
@@ -49,7 +55,7 @@ export const meta: Route.MetaFunction = ({ loaderData }) => {
 };
 
 export default function Post({ loaderData }: Route.ComponentProps) {
-  const { post } = loaderData;
+  const { post, github, related } = loaderData;
   const Body = loadBody(post.slug);
 
   return (
@@ -60,6 +66,7 @@ export default function Post({ loaderData }: Route.ComponentProps) {
           <h1>{post.title}</h1>
           <time dateTime={post.date}>{formatDate(post.date)}</time>
         </header>
+        {github && <RepoCard github={github} />}
         <div className="post-body">
           {Body && (
             <Suspense fallback={null}>
@@ -68,6 +75,19 @@ export default function Post({ loaderData }: Route.ComponentProps) {
           )}
         </div>
       </article>
+      {related.length > 0 && (
+        <section className="related" aria-label="Related posts">
+          <h2>Related posts</h2>
+          <ul>
+            {related.map((entry) => (
+              <li key={entry.slug}>
+                <Link to={`/posts/${entry.slug}`}>{entry.title}</Link>
+                <time dateTime={entry.date}> — {formatDate(entry.date)}</time>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       <nav className="post-footer">
         <Link to="/" className="back-link">
           ← All posts

@@ -1,0 +1,45 @@
+---
+title: "Post Template"
+date: "2026-07-04"
+description: "Copy this folder to start a new post. Never published — it's a permanent draft."
+draft: true
+# Optional: show a repo card under the title. Shorthand form:
+github: cinderblock/arbitraryshit.com
+# ...or pin the commit you wrote the post against, to get the
+# "N commits since" line (git -C <project> rev-parse HEAD):
+# github:
+#   repo: owner/repo
+#   commit: 0123456789012345678901234567890123456789
+related:
+  - building-this-site
+---
+
+This post is a template (and a living test of the draft + related-post
+machinery — it links to the first post, which shows a backlink here in dev).
+
+To start a new post:
+
+1. Copy this folder to `app/posts/<your-slug>/` — the folder name is the URL.
+2. Fill in the frontmatter above. `title`, `date` (quoted!), and
+   `description` are required. Delete `draft: true` when it's ready.
+3. Write. Markdown, code blocks, tables all work.
+
+Images live in the folder and get imported:
+
+```mdx
+import photo from "./photo.jpg";
+
+<img src={photo} alt="Describe it" />
+```
+
+Interactive components too — any `.tsx` file in the folder:
+
+```mdx
+import { Widget } from "./widget";
+
+<Widget />
+```
+
+`related:` takes a list of post slugs. Links are symmetric: listing a post
+here also puts a backlink on that post, so old posts point forward to new
+ones automatically.

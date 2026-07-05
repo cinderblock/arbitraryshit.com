@@ -48,6 +48,21 @@ Words. Markdown. Code blocks get highlighted automatically.
 - **Permalinks**: the post lives at `https://arbitraryshit.com/posts/<folder-name>`
   as prerendered HTML with a canonical tag; headings get anchor ids, so
   `/posts/my-cool-thing#some-section` deep-links work too.
+- **Repo card**: add `github: owner/repo` to show a standardized GitHub card
+  under the title (stars, open issues, open PRs, contributors). Pin the
+  commit you wrote against to also get a "N commits since" drift line:
+
+  ```yaml
+  github:
+    repo: owner/repo
+    commit: <git -C <project> rev-parse HEAD>
+  ```
+
+- **Related posts**: `related: [other-slug]`. Links are symmetric — listing a
+  post also puts a backlink on it, so old posts point forward to new ones.
+  A typo'd slug fails the build.
+
+`app/posts/post-template/` is a permanent draft you can copy to start a post.
 
 Commit, push to `master`, and Cloudflare Pages builds and deploys it.
 
@@ -68,6 +83,16 @@ downloads more because there are more posts:
 - `app/lib/posts.ts` — client side: post bodies are only ever imported
   dynamically (`import.meta.glob`), so each post plus its interactive
   components is its own chunk, fetched only when that post is viewed.
+
+## GitHub stats
+
+`data/github-stats.json` is a committed snapshot of stars / issues / PRs /
+contributors and "commits ahead of each post's pinned sha" for every repo a
+post references. `.github/workflows/refresh-github-stats.yml` refreshes it
+daily (and on demand via workflow_dispatch), committing only when the
+numbers changed — that commit triggers the Cloudflare Pages rebuild that
+bakes fresh numbers into the static pages. Run `bun run refresh:github`
+locally after adding a repo to a post.
 
 ## Scripts
 

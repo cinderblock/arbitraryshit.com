@@ -2,6 +2,9 @@
 title: "Building This Site"
 date: "2026-07-04"
 description: "A bespoke static blog stack: React Router prerendering, MDX posts as folders, and interactive components — no framework-of-the-month."
+github:
+  repo: cinderblock/arbitraryshit.com
+  commit: c44d67c20a814743914465408b51387b272f3272
 ---
 
 import { ArbitraryNumber } from "./arbitrary-number";
@@ -61,6 +64,13 @@ site's namesake, an arbitrary number generator:
 
 That's a plain `.tsx` file sitting in the post's folder. No shortcodes, no
 plugin API — it's just a component.
+
+## The repo card
+
+That box up top comes from two frontmatter lines: the repo name and the
+commit this post was written against. A daily job asks GitHub how far the
+project has drifted since — so if you're reading this months later and the
+card says the repo is fifty commits ahead, trust the repo, not me.
 
 ## Writing workflow
 

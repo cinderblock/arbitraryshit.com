@@ -73,6 +73,36 @@ test.describe("Post Page", () => {
     ).toHaveAttribute("id", "the-stack");
   });
 
+  test("shows the repo card with stats and pinned commit", async ({ page }) => {
+    await page.goto("/posts/building-this-site");
+    const card = page.locator(".repo-card");
+    await expect(
+      card.getByRole("link", { name: "cinderblock/arbitraryshit.com" }),
+    ).toBeVisible();
+    await expect(card.locator(".repo-card-stats")).toContainText("contributor");
+    await expect(card.locator(".repo-card-pin")).toContainText(
+      "Written at c44d67c",
+    );
+  });
+
+  test("shows related posts with symmetric backlinks (dev)", async ({
+    page,
+  }) => {
+    // The draft template lists building-this-site as related; in dev both
+    // directions render. In production the draft (and thus the backlink)
+    // is excluded entirely.
+    await page.goto("/posts/building-this-site");
+    await expect(
+      page.locator(".related").getByRole("link", { name: "Post Template" }),
+    ).toBeVisible();
+    await page.goto("/posts/post-template");
+    await expect(
+      page
+        .locator(".related")
+        .getByRole("link", { name: "Building This Site" }),
+    ).toBeVisible();
+  });
+
   test("shows not-found for unknown post", async ({ page }) => {
     await page.goto("/posts/this-does-not-exist");
     await expect(page.getByText("Page Not Found")).toBeVisible();

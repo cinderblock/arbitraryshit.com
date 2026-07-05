@@ -65,6 +65,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export function ErrorBoundary() {
   const error = useRouteError();
   const status = isRouteErrorResponse(error) ? error.status : null;
+  // Surface the underlying error; the boundary UI intentionally hides it.
+  console.error("Route error:", error);
   return (
     <main className="container">
       <section className="hero">
