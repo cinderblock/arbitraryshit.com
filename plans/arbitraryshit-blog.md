@@ -37,6 +37,7 @@ Scaling invariant: every page view downloads O(1) data regardless of post count 
 - Route **loaders run at build time** (`ssr:false` + prerender) → metadata ships as per-route `.data` files + prerendered HTML, zero bytes in JS bundles. Home loader = full list; post loader = own frontmatter only
 - `app/lib/posts.ts` — client side: lazy `import.meta.glob` of post bodies → one chunk per post, fetched on view
 - `react-router.config.ts` — `prerender()` → `/` + `/posts/<slug>` (drafts excluded)
+- Permalinks: `/posts/<folder-name>` prerendered HTML; canonical + og:url from `app/lib/site.ts` (single URL constant, also used by feed); `rehype-slug` gives headings anchor ids for #section deep links
 - Syntax highlighting: `@shikijs/rehype` at MDX compile time (zero client JS)
 - Interactive elements: plain TSX components imported by the MDX, hydrated client-side
 - RSS: `scripts/generate-feed.ts` in `bun run build`, capped at 20 newest

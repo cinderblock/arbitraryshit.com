@@ -200,6 +200,12 @@ a:focus-visible {
   margin-top: 2.5rem;
 }
 
+/* Breathing room when arriving via a #heading anchor link. */
+.post-body h2,
+.post-body h3 {
+  scroll-margin-top: 1rem;
+}
+
 .post-body h3 {
   font-size: 1.25rem;
   font-weight: 600;

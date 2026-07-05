@@ -45,6 +45,9 @@ Words. Markdown. Code blocks get highlighted automatically.
   folder, import it in the MDX, drop it in the prose. It hydrates client-side.
 - **Drafts**: add `draft: true` to the frontmatter. Drafts render in dev
   (with a badge) but are excluded from the built site and the feed.
+- **Permalinks**: the post lives at `https://arbitraryshit.com/posts/<folder-name>`
+  as prerendered HTML with a canonical tag; headings get anchor ids, so
+  `/posts/my-cool-thing#some-section` deep-links work too.
 
 Commit, push to `master`, and Cloudflare Pages builds and deploys it.
 

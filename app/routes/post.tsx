@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import { Link } from "react-router";
 import { formatDate, getPostBody } from "../lib/posts";
 import { getPost } from "../lib/posts.server";
+import { postUrl } from "../lib/site";
 import type { Route } from "./+types/post";
 
 const bodyCache = new Map<string, LazyExoticComponent<ComponentType>>();
@@ -31,10 +32,13 @@ export const meta: Route.MetaFunction = ({ loaderData }) => {
   if (!loaderData) return [{ title: "Post Not Found — ArbitraryShit.com" }];
   const { post } = loaderData;
   const title = `${post.title} — ArbitraryShit.com`;
+  const url = postUrl(post.slug);
   return [
     { title },
+    { tagName: "link", rel: "canonical", href: url },
     { name: "description", content: post.description },
     { property: "og:type", content: "article" },
+    { property: "og:url", content: url },
     { property: "og:title", content: post.title },
     { property: "og:description", content: post.description },
     { property: "article:published_time", content: post.date },

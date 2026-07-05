@@ -2,9 +2,8 @@
 // Runs as part of `bun run build`, after react-router build.
 import { existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { postUrl, SITE_URL } from "../app/lib/site";
 import { readPostsFromFs } from "./posts-fs";
-
-const SITE_URL = "https://arbitraryshit.com";
 const OUT_DIR = join(import.meta.dirname, "..", "build", "client");
 
 function escapeXml(text: string): string {
@@ -28,7 +27,7 @@ const posts = readPostsFromFs().filter((post) => !post.draft);
 const items = posts
   .slice(0, FEED_LIMIT)
   .map((post) => {
-    const url = `${SITE_URL}/posts/${post.slug}`;
+    const url = postUrl(post.slug);
     const pubDate = new Date(`${post.date}T12:00:00Z`).toUTCString();
     return `    <item>
       <title>${escapeXml(post.title)}</title>

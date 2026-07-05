@@ -2,6 +2,7 @@ import type { MetaFunction } from "react-router";
 import { Link } from "react-router";
 import { formatDate } from "../lib/posts";
 import { listPosts } from "../lib/posts.server";
+import { SITE_URL } from "../lib/site";
 import type { Route } from "./+types/home";
 
 // Runs at build time (and in dev); the post list ships as prerendered data
@@ -16,8 +17,10 @@ export const meta: MetaFunction = () => {
     "Random little projects, arbitrarily documented. Hardware, software, and whatever else.";
   return [
     { title },
+    { tagName: "link", rel: "canonical", href: `${SITE_URL}/` },
     { name: "description", content: description },
     { property: "og:type", content: "website" },
+    { property: "og:url", content: `${SITE_URL}/` },
     { property: "og:title", content: title },
     { property: "og:description", content: description },
     { name: "twitter:card", content: "summary" },

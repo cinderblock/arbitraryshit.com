@@ -62,6 +62,17 @@ test.describe("Post Page", () => {
     }).toPass();
   });
 
+  test("has a canonical permalink and heading anchors", async ({ page }) => {
+    await page.goto("/posts/building-this-site");
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      "href",
+      "https://arbitraryshit.com/posts/building-this-site",
+    );
+    await expect(
+      page.getByRole("heading", { name: "The stack" }),
+    ).toHaveAttribute("id", "the-stack");
+  });
+
   test("shows not-found for unknown post", async ({ page }) => {
     await page.goto("/posts/this-does-not-exist");
     await expect(page.getByText("Page Not Found")).toBeVisible();
