@@ -41,6 +41,8 @@ export const meta: Route.MetaFunction = ({ loaderData }) => {
   const url = postUrl(post.slug);
   return [
     { title },
+    // Drafts are reachable but unlisted; keep them out of search indexes.
+    ...(post.draft ? [{ name: "robots", content: "noindex" }] : []),
     { tagName: "link", rel: "canonical", href: url },
     { name: "description", content: post.description },
     { property: "og:type", content: "article" },

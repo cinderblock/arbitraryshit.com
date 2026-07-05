@@ -43,8 +43,10 @@ Words. Markdown. Code blocks get highlighted automatically.
   Vite hashes and copies the asset.
 - **Interactive elements**: export a component from a `.tsx` file in the post
   folder, import it in the MDX, drop it in the prose. It hydrates client-side.
-- **Drafts**: add `draft: true` to the frontmatter. Drafts render in dev
-  (with a badge) but are excluded from the built site and the feed.
+- **Drafts**: add `draft: true` to the frontmatter. Drafts are listed in dev
+  (with a badge); in production they're unlisted — off the home page and
+  feed, `noindex` for crawlers — but still built, so the URL works as a
+  shareable preview.
 - **Permalinks**: the post lives at `https://arbitraryshit.com/posts/<folder-name>`
   as prerendered HTML with a canonical tag; headings get anchor ids, so
   `/posts/my-cool-thing#some-section` deep-links work too.

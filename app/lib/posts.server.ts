@@ -7,13 +7,17 @@ import { readPostsFromFs } from "../../scripts/posts-fs";
 
 export type PostMeta = FsPost;
 
-/** All posts, newest first. Drafts are included only in dev. */
+/**
+ * Listed posts, newest first. Drafts are listed only in dev; in production
+ * they're unlisted (but still prerendered — see getPost).
+ */
 export function listPosts(): PostMeta[] {
   return readPostsFromFs().filter((post) => import.meta.env.DEV || !post.draft);
 }
 
+/** Any post by slug, drafts included — draft pages exist as unlisted URLs. */
 export function getPost(slug: string): PostMeta | undefined {
-  return listPosts().find((post) => post.slug === slug);
+  return readPostsFromFs().find((post) => post.slug === slug);
 }
 
 export interface RelatedPost {

@@ -19,6 +19,9 @@ effort. Cadence ~weekly.
 
 ## Decisions already made (don't re-ask)
 
+- **Authorship (2026-07-04)**: post prose is human-written by Cameron; AI may edit prose, and may write code/diagrams/components/scaffolding. AI placeholder text must be clearly marked and stay `draft: true` until rewritten. The first post ("Building This Site") is currently such a draft — its prose is AI scaffolding awaiting Cameron's rewrite.
+- **Drafts are unlisted, not absent (2026-07-04)**: drafts prerender in production as noindexed unlisted URLs (off home/feed). Forced partly by RR: `ssr:false` fails the build if a route has a loader but zero prerendered paths, so an all-drafts blog must still prerender them. Public repo shows draft contents anyway.
+
 - **Stack**: ssg-base as-is, extended — not Astro/Hugo/etc. User wants bespoke.
 - **Deploy**: push to GitHub → **Cloudflare Pages git-connected build+host**
   (`build_command: bun run build`, `build_output_dir: build/client`, branch `master`),
@@ -69,7 +72,8 @@ Scaling invariant: every page view downloads O(1) data regardless of post count 
 - With `ssr: false` + `prerender`, route `loader`s still run at build time for prerendered paths — but we avoid loaders entirely (no `.data` fetch failures on unknown paths); post meta comes from the statically-bundled registry.
 - Eager `import.meta.glob(..., { import: "frontmatter" })` triggers `INEFFECTIVE_DYNAMIC_IMPORT`: the static import drags every post body into the main chunk. Never statically import MDX modules. (First fixed with a `virtual:posts-meta` vite plugin; replaced 2026-07-04 with build-time route loaders after user flagged bundle growth — loaders are simpler AND keep metadata out of JS entirely. Verified by grepping `build/client/assets/*.js` for frontmatter text: zero hits.)
 - RR 8 meta functions receive `loaderData`, not `data` (v7 name).
-- With `ssr:false`, loaders only serve paths in the prerender list — and dev enforces it (`SingleFetchNoResultError: No result found for routeId`). Draft posts must therefore be in the prerender list in dev (`NODE_ENV === "development"` branch in react-router.config.ts) even though they're excluded from builds.
+- With `ssr:false`, loaders only serve paths in the prerender list — and dev enforces it (`SingleFetchNoResultError: No result found for routeId`). Worse: the build FAILS outright ("Invalid route exports found when prerendering with ssr:false") if a loader-bearing route ends up with zero prerendered paths. Resolution: prerender ALL posts including drafts (unlisted + noindex in prod).
+- oxfmt mangles MDX `{/* ... */}` comments in .mdx files (rewrites `*` emphasis to `_`, producing invalid syntax). Use YAML `#` comments in frontmatter for author notes instead.
 - Root ErrorBoundary logs the underlying error (`console.error("Route error:", ...)`) — it was silently swallowing errors, which made the above brutal to diagnose.
 - Editorial policy for published posts lives in CLAUDE.md (repo root): formatting edits free; content edits need Cameron's per-edit call on disclosed-vs-silent revision.
 - ssg-base has no `vite-tsconfig-paths`, so the `~/*` tsconfig alias fails at runtime in dev — use relative imports in app code.

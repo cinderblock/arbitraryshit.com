@@ -1,7 +1,7 @@
 ---
 title: "Post Template"
 date: "2026-07-04"
-description: "Copy this folder to start a new post. Never published — it's a permanent draft."
+description: "Copy this folder to start a new post. Never listed — it's a permanent draft."
 draft: true
 # Optional: show a repo card under the title. Shorthand form:
 github: cinderblock/arbitraryshit.com
@@ -21,7 +21,9 @@ To start a new post:
 
 1. Copy this folder to `app/posts/<your-slug>/` — the folder name is the URL.
 2. Fill in the frontmatter above. `title`, `date` (quoted!), and
-   `description` are required. Delete `draft: true` when it's ready.
+   `description` are required. While `draft: true` is set, the post is
+   listed in dev but unlisted in production (the URL still works as a
+   noindexed preview). Delete the flag to publish.
 3. Write. Markdown, code blocks, tables all work.
 
 Images live in the folder and get imported:

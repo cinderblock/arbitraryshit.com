@@ -3,6 +3,19 @@
 This is a personal blog. The repo is public and the git history is the
 permanent reference for everything ever published.
 
+## Authorship
+
+Post prose is **human-written** — it's Cameron's voice. AI may:
+
+- edit prose for grammar, clarity, and tightening (editing ≠ authoring),
+- write code snippets, interactive components, diagrams, alt text, and
+  frontmatter scaffolding,
+- draft an outline or placeholder text to structure a post — but only
+  clearly marked as placeholder, with `draft: true` set, until Cameron has
+  rewritten it in his own words.
+
+Never publish AI-authored prose as a post.
+
 ## Editing published posts
 
 - **Formatting/mechanical edits** (typos, whitespace, broken links, code
@@ -19,7 +32,9 @@ permanent reference for everything ever published.
 
 - Push to `master` = publish (Cloudflare Pages builds `bun run build` from
   this repo). There is no staging environment; drafts (`draft: true`) are
-  the staging mechanism — they render in dev only.
+  the staging mechanism — listed in dev, and deployed as unlisted noindexed
+  preview URLs in production (off the home page and feed; the public repo
+  shows their contents anyway).
 - `app/posts/post-template/` is a permanent draft that doubles as the
   authoring template and as test fixture for draft/related machinery. Don't
   publish it or delete it casually.

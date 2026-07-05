@@ -103,6 +103,14 @@ test.describe("Post Page", () => {
     ).toBeVisible();
   });
 
+  test("marks draft posts noindex", async ({ page }) => {
+    await page.goto("/posts/post-template");
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+      "content",
+      "noindex",
+    );
+  });
+
   test("shows not-found for unknown post", async ({ page }) => {
     await page.goto("/posts/this-does-not-exist");
     await expect(page.getByText("Page Not Found")).toBeVisible();
