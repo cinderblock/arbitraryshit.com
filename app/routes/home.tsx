@@ -14,7 +14,7 @@ export function loader() {
 export const meta: MetaFunction = () => {
   const title = "ArbitraryShit.com";
   const description =
-    "Random little projects, arbitrarily documented. Hardware, software, and whatever else.";
+    "The personal blog of Cameron Tacklind — random little projects, arbitrarily documented. Hardware, software, and whatever else.";
   return [
     { title },
     { tagName: "link", rel: "canonical", href: `${SITE_URL}/` },
@@ -36,7 +36,8 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <section className="intro-block">
         <h1>Arbitrary Shit</h1>
         <p className="subtitle">
-          Random little projects, arbitrarily documented.
+          Random little projects, arbitrarily documented — the personal blog of{" "}
+          <a href="https://cameron.tacklind.com">Cameron Tacklind</a>.
         </p>
       </section>
       <section aria-label="Posts">

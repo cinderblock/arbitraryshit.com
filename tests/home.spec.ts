@@ -25,6 +25,13 @@ test.describe("Home Page", () => {
     const rss = page.getByRole("link", { name: "RSS" });
     await expect(rss).toHaveAttribute("href", "/feed.xml");
   });
+
+  test("footer links to cameron.tacklind.com", async ({ page }) => {
+    const link = page
+      .locator(".site-footer")
+      .getByRole("link", { name: "Cameron Tacklind" });
+    await expect(link).toHaveAttribute("href", "https://cameron.tacklind.com");
+  });
 });
 
 test.describe("Post Page", () => {
@@ -32,7 +39,9 @@ test.describe("Post Page", () => {
     await page.goto("/");
     await page.locator(".post-list-item a").first().click();
     await expect(page).toHaveURL(/\/posts\/[a-z0-9-]+/);
-    await expect(page.locator("article h1")).toBeVisible();
+    // Generous timeout: on a cold dev server this navigation triggers the
+    // first compile of the post route + MDX + shiki.
+    await expect(page.locator("article h1")).toBeVisible({ timeout: 30_000 });
   });
 
   test("renders MDX content with highlighted code", async ({ page }) => {
@@ -85,22 +94,24 @@ test.describe("Post Page", () => {
     );
   });
 
-  test("shows related posts with symmetric backlinks (dev)", async ({
-    page,
-  }) => {
-    // The draft template lists building-this-site as related; in dev both
-    // directions render. In production the draft (and thus the backlink)
-    // is excluded entirely.
-    await page.goto("/posts/building-this-site");
-    await expect(
-      page.locator(".related").getByRole("link", { name: "Post Template" }),
-    ).toBeVisible();
+  test("links posts directionally via builds-on (dev)", async ({ page }) => {
+    // The draft template declares builds-on: building-this-site; in dev
+    // both directions render (a "Builds on" line on the template, a
+    // "Built on by" backlink on the target). Drafts are unlisted in
+    // production, so neither appears there.
     await page.goto("/posts/post-template");
     await expect(
-      page
-        .locator(".related")
-        .getByRole("link", { name: "Building This Site" }),
+      page.locator(".builds-on").getByRole("link", {
+        name: "Building This Site",
+      }),
     ).toBeVisible();
+    await page.goto("/posts/building-this-site");
+    await expect(
+      page.locator(".built-on-by").getByRole("link", { name: "Post Template" }),
+    ).toBeVisible();
+    // The template also lists building-this-site under related:, but
+    // directional links win — no duplicate entry in the related section.
+    await expect(page.locator(".related-posts")).toHaveCount(0);
   });
 
   test("marks draft posts noindex", async ({ page }) => {

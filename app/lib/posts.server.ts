@@ -20,46 +20,64 @@ export function getPost(slug: string): PostMeta | undefined {
   return readPostsFromFs().find((post) => post.slug === slug);
 }
 
-export interface RelatedPost {
+export interface PostLink {
   slug: string;
   title: string;
   date: string;
   description: string;
 }
 
+export interface PostLinks {
+  /** Posts this one declares it builds on (directional, from frontmatter). */
+  buildsOn: PostLink[];
+  /** Reverse of buildsOn: posts that declare they build on this one. */
+  builtOnBy: PostLink[];
+  /** Non-directional: explicit `related:` plus backlinks, minus anything
+   *  already in buildsOn/builtOnBy. */
+  related: PostLink[];
+}
+
 /**
- * Related posts for a post: its explicit `related:` list first, then
- * backlinks (posts whose `related:` lists this one), newest first.
- *
- * A slug that doesn't exist at all is a build error (catches typos at
- * prerender time). A slug that exists but is draft-filtered is silently
- * skipped — the link appears once that post is published.
+ * Cross-links for a post. A slug that doesn't exist at all is a build error
+ * (catches typos at prerender time). A slug that exists but is
+ * draft-filtered is silently skipped — the link appears once that post is
+ * published.
  */
-export function getRelatedPosts(post: PostMeta): RelatedPost[] {
+export function getPostLinks(post: PostMeta): PostLinks {
   const visible = listPosts();
   const bySlug = new Map(visible.map((p) => [p.slug, p]));
   const allSlugs = new Set(readPostsFromFs().map((p) => p.slug));
 
-  for (const slug of post.related) {
+  for (const slug of [...post.related, ...post.buildsOn]) {
     if (!allSlugs.has(slug)) {
-      throw new Error(
-        `Post "${post.slug}" lists unknown related post "${slug}"`,
-      );
+      throw new Error(`Post "${post.slug}" links unknown post "${slug}"`);
     }
   }
 
-  const backlinks = visible
-    .filter((p) => p.slug !== post.slug && p.related.includes(post.slug))
-    .map((p) => p.slug);
+  const toLinks = (slugs: string[]): PostLink[] =>
+    [...new Set(slugs)]
+      .filter((slug) => slug !== post.slug)
+      .flatMap((slug) => {
+        const linked = bySlug.get(slug);
+        if (!linked) return [];
+        const { title, date, description } = linked;
+        return [{ slug, title, date, description }];
+      });
 
-  const slugs = [...new Set([...post.related, ...backlinks])].filter(
-    (slug) => slug !== post.slug,
+  const buildsOn = toLinks(post.buildsOn);
+  const builtOnBy = toLinks(
+    visible.filter((p) => p.buildsOn.includes(post.slug)).map((p) => p.slug),
   );
 
-  return slugs.flatMap((slug) => {
-    const related = bySlug.get(slug);
-    if (!related) return [];
-    const { title, date, description } = related;
-    return [{ slug, title, date, description }];
-  });
+  const directional = new Set(
+    [...buildsOn, ...builtOnBy].map((link) => link.slug),
+  );
+  const relatedBacklinks = visible
+    .filter((p) => p.slug !== post.slug && p.related.includes(post.slug))
+    .map((p) => p.slug);
+  const related = toLinks([...post.related, ...relatedBacklinks]).filter(
+    (link) => !directional.has(link.slug),
+  );
+
+  return { buildsOn, builtOnBy, related };
 }

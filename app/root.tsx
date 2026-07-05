@@ -55,6 +55,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         {children}
+        <footer className="site-footer">
+          <div className="site-footer-inner">
+            <span>
+              The personal blog of{" "}
+              <a href="https://cameron.tacklind.com">Cameron Tacklind</a>
+            </span>
+            <a href="https://github.com/cinderblock/arbitraryshit.com">
+              Source
+            </a>
+          </div>
+        </footer>
         <ScrollRestoration />
         <Scripts />
       </body>

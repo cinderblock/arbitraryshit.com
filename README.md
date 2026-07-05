@@ -60,9 +60,11 @@ Words. Markdown. Code blocks get highlighted automatically.
     commit: <git -C <project> rev-parse HEAD>
   ```
 
-- **Related posts**: `related: [other-slug]`. Links are symmetric — listing a
-  post also puts a backlink on it, so old posts point forward to new ones.
-  A typo'd slug fails the build.
+- **Linking posts**: `builds-on: [other-slug]` for directional dependencies
+  (tools built on other tools) — renders "Builds on …" under the title and a
+  "Built on by …" backlink on the other post. `related: [other-slug]` for
+  non-directional links, also symmetric. Inline markdown links to
+  `/posts/<slug>` work anywhere in the body. Typo'd slugs fail the build.
 
 `app/posts/post-template/` is a permanent draft you can copy to start a post.
 

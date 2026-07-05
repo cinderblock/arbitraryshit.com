@@ -12,6 +12,10 @@ github: cinderblock/arbitraryshit.com
 #   commit: 0123456789012345678901234567890123456789
 related:
   - building-this-site
+# Directional: this post extends/depends on another. Shows a "Builds on"
+# line up top here, and a "Built on by" backlink on the other post.
+builds-on:
+  - building-this-site
 ---
 
 This post is a template (and a living test of the draft + related-post
@@ -42,6 +46,14 @@ import { Widget } from "./widget";
 <Widget />
 ```
 
-`related:` takes a list of post slugs. Links are symmetric: listing a post
-here also puts a backlink on that post, so old posts point forward to new
-ones automatically.
+Three ways to link posts together:
+
+- `builds-on: [slug]` — directional, for tools built on top of other tools.
+  Shows "Builds on …" under this post's title and "Built on by …" at the
+  bottom of the other post, so old posts point forward automatically.
+- `related: [slug]` — non-directional. Also symmetric: listing a post here
+  puts a backlink on it.
+- Inline, mid-sentence: `[the LED driver](/posts/led-driver)` — plain
+  markdown links to post URLs work anywhere in the body.
+
+Slugs are checked at build time — a typo fails the build.

@@ -21,6 +21,7 @@ export interface FsPost {
   draft: boolean;
   github?: PostGithub;
   related: string[];
+  buildsOn: string[];
 }
 
 const POSTS_DIR = join(process.cwd(), "app", "posts");
@@ -60,10 +61,10 @@ function parseGithub(raw: unknown, mdxPath: string): PostGithub | undefined {
   return github;
 }
 
-function parseRelated(raw: unknown, mdxPath: string): string[] {
+function parseSlugList(raw: unknown, key: string, mdxPath: string): string[] {
   if (raw === undefined) return [];
   if (!Array.isArray(raw) || raw.some((entry) => typeof entry !== "string")) {
-    throw new Error(`"related" must be a list of post slugs in ${mdxPath}`);
+    throw new Error(`"${key}" must be a list of post slugs in ${mdxPath}`);
   }
   return raw as string[];
 }
@@ -98,7 +99,12 @@ export function readPostsFromFs(): FsPost[] {
           description: frontmatter.description as string,
           draft: frontmatter.draft === true,
           github: parseGithub(frontmatter.github, mdxPath),
-          related: parseRelated(frontmatter.related, mdxPath),
+          related: parseSlugList(frontmatter.related, "related", mdxPath),
+          buildsOn: parseSlugList(
+            frontmatter["builds-on"],
+            "builds-on",
+            mdxPath,
+          ),
         },
       ];
     })

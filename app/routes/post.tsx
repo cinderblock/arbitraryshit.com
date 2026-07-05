@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import { RepoCard } from "../components/repo-card";
 import { getRepoCard } from "../lib/github.server";
 import { formatDate, getPostBody } from "../lib/posts";
-import { getPost, getRelatedPosts } from "../lib/posts.server";
+import { getPost, getPostLinks } from "../lib/posts.server";
 import { postUrl } from "../lib/site";
 import type { Route } from "./+types/post";
 
@@ -30,7 +30,7 @@ export function loader({ params }: Route.LoaderArgs) {
   return {
     post,
     github: getRepoCard(post),
-    related: getRelatedPosts(post),
+    links: getPostLinks(post),
   };
 }
 
@@ -56,8 +56,33 @@ export const meta: Route.MetaFunction = ({ loaderData }) => {
   ];
 };
 
+function PostLinkList({
+  title,
+  links,
+  className,
+}: {
+  title: string;
+  links: { slug: string; title: string; date: string }[];
+  className: string;
+}) {
+  if (links.length === 0) return null;
+  return (
+    <section className={`related ${className}`} aria-label={title}>
+      <h2>{title}</h2>
+      <ul>
+        {links.map((entry) => (
+          <li key={entry.slug}>
+            <Link to={`/posts/${entry.slug}`}>{entry.title}</Link>
+            <time dateTime={entry.date}> — {formatDate(entry.date)}</time>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 export default function Post({ loaderData }: Route.ComponentProps) {
-  const { post, github, related } = loaderData;
+  const { post, github, links } = loaderData;
   const Body = loadBody(post.slug);
 
   return (
@@ -69,6 +94,17 @@ export default function Post({ loaderData }: Route.ComponentProps) {
           <time dateTime={post.date}>{formatDate(post.date)}</time>
         </header>
         {github && <RepoCard github={github} />}
+        {links.buildsOn.length > 0 && (
+          <p className="builds-on">
+            Builds on{" "}
+            {links.buildsOn.map((entry, i) => (
+              <span key={entry.slug}>
+                {i > 0 && ", "}
+                <Link to={`/posts/${entry.slug}`}>{entry.title}</Link>
+              </span>
+            ))}
+          </p>
+        )}
         <div className="post-body">
           {Body && (
             <Suspense fallback={null}>
@@ -77,19 +113,16 @@ export default function Post({ loaderData }: Route.ComponentProps) {
           )}
         </div>
       </article>
-      {related.length > 0 && (
-        <section className="related" aria-label="Related posts">
-          <h2>Related posts</h2>
-          <ul>
-            {related.map((entry) => (
-              <li key={entry.slug}>
-                <Link to={`/posts/${entry.slug}`}>{entry.title}</Link>
-                <time dateTime={entry.date}> — {formatDate(entry.date)}</time>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      <PostLinkList
+        title="Built on by"
+        links={links.builtOnBy}
+        className="built-on-by"
+      />
+      <PostLinkList
+        title="Related posts"
+        links={links.related}
+        className="related-posts"
+      />
       <nav className="post-footer">
         <Link to="/" className="back-link">
           ← All posts
