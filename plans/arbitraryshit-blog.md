@@ -60,9 +60,10 @@ Scaling invariant: every page view downloads O(1) data regardless of post count 
 - [x] Playwright tests — 11 passing (chromium)
 - [x] fmt / typecheck / build green locally
 - [x] Create GitHub repo cinderblock/arbitraryshit.com, push (public, master)
-- [x] Stage ops change (pages block in arbitraryshit.yaml) — edited in ops working tree, `bun run validate` passes, NOT committed/pushed ← waiting for user consent
-- [ ] After consent: user (or authorized session) commits+pushes ops; CI sync creates Pages project + apex CNAME
-- [ ] Verify CF Pages build, custom domain, DNS, feed.xml live
+- [x] Stage ops change (pages block in arbitraryshit.yaml); user consented 2026-07-05 ("Yes, push it")
+- [x] Ops pushed (ops@956df57); Cloudflare sync CI green incl. verify step — Pages project + apex CNAME live
+- [ ] Verify CF Pages first build, custom domain serving, feed.xml live ← current (first check: 522, no deployment yet; pushed this commit to trigger)
+- [ ] Cameron rewrites first-post prose in his voice, removes draft flag → launch
 
 ## Findings / gotchas
 
