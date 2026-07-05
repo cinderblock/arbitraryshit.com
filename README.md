@@ -50,13 +50,21 @@ Commit, push to `master`, and Cloudflare Pages builds and deploys it.
 
 ## How posts are wired
 
-- `app/lib/posts.ts` — runtime registry via `import.meta.glob`: frontmatter is
-  bundled eagerly for the home list; post bodies are lazy so each post is its
-  own chunk.
-- `scripts/posts-fs.ts` — the same enumeration via `node:fs` for build-time
-  consumers: the prerender list in `react-router.config.ts` and the RSS
-  generator (`scripts/generate-feed.ts`, emits `build/client/feed.xml`).
-- `app/routes/post.tsx` — the `posts/:slug` route; prerendered per post.
+Built to stay O(1) per page view as the blog grows — no bundle or page
+downloads more because there are more posts:
+
+- `scripts/posts-fs.ts` — single source of truth: enumerates
+  `app/posts/*/index.mdx` and parses frontmatter via `node:fs`. Used by the
+  prerender list in `react-router.config.ts`, the RSS generator
+  (`scripts/generate-feed.ts`, emits `build/client/feed.xml`, capped to the
+  20 newest), and route loaders (via `app/lib/posts.server.ts`).
+- Route loaders run at **build time** (`ssr: false` + prerender), so post
+  metadata ships as per-route `.data` files and prerendered HTML — never as
+  JavaScript. The home route's loader carries the full list; each post
+  route's loader carries only its own frontmatter.
+- `app/lib/posts.ts` — client side: post bodies are only ever imported
+  dynamically (`import.meta.glob`), so each post plus its interactive
+  components is its own chunk, fetched only when that post is viewed.
 
 ## Scripts
 

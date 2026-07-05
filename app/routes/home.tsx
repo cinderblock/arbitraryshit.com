@@ -1,6 +1,14 @@
 import type { MetaFunction } from "react-router";
 import { Link } from "react-router";
-import { formatDate, posts } from "../lib/posts";
+import { formatDate } from "../lib/posts";
+import { listPosts } from "../lib/posts.server";
+import type { Route } from "./+types/home";
+
+// Runs at build time (and in dev); the post list ships as prerendered data
+// for this route only, not as JavaScript.
+export function loader() {
+  return { posts: listPosts() };
+}
 
 export const meta: MetaFunction = () => {
   const title = "ArbitraryShit.com";
@@ -18,7 +26,8 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export default function Home() {
+export default function Home({ loaderData }: Route.ComponentProps) {
+  const { posts } = loaderData;
   return (
     <main className="container">
       <section className="intro-block">

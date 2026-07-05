@@ -1,8 +1,9 @@
 import type { ComponentType, LazyExoticComponent } from "react";
 import { lazy, Suspense } from "react";
-import type { MetaFunction } from "react-router";
-import { Link, useParams } from "react-router";
-import { formatDate, getPost, getPostBody } from "../lib/posts";
+import { Link } from "react-router";
+import { formatDate, getPostBody } from "../lib/posts";
+import { getPost } from "../lib/posts.server";
+import type { Route } from "./+types/post";
 
 const bodyCache = new Map<string, LazyExoticComponent<ComponentType>>();
 
@@ -17,9 +18,18 @@ function loadBody(slug: string) {
   return Body;
 }
 
-export const meta: MetaFunction = ({ params }) => {
-  const post = params.slug ? getPost(params.slug) : undefined;
-  if (!post) return [{ title: "Post Not Found — ArbitraryShit.com" }];
+// Runs at build time for each prerendered post; each post page fetches only
+// its own metadata. Unknown slugs are never prerendered, so in production
+// they fall through to the error boundary.
+export function loader({ params }: Route.LoaderArgs) {
+  const post = getPost(params.slug);
+  if (!post) throw new Response("Not Found", { status: 404 });
+  return { post };
+}
+
+export const meta: Route.MetaFunction = ({ loaderData }) => {
+  if (!loaderData) return [{ title: "Post Not Found — ArbitraryShit.com" }];
+  const { post } = loaderData;
   const title = `${post.title} — ArbitraryShit.com`;
   return [
     { title },
@@ -34,24 +44,9 @@ export const meta: MetaFunction = ({ params }) => {
   ];
 };
 
-export default function Post() {
-  const { slug } = useParams();
-  const post = slug ? getPost(slug) : undefined;
-  const Body = slug ? loadBody(slug) : undefined;
-
-  if (!post || !Body) {
-    return (
-      <main className="container">
-        <section className="hero">
-          <h1>404</h1>
-          <p className="tagline">Post Not Found</p>
-          <Link to="/" className="back-link">
-            Go back home
-          </Link>
-        </section>
-      </main>
-    );
-  }
+export default function Post({ loaderData }: Route.ComponentProps) {
+  const { post } = loaderData;
+  const Body = loadBody(post.slug);
 
   return (
     <main className="container">
@@ -62,9 +57,11 @@ export default function Post() {
           <time dateTime={post.date}>{formatDate(post.date)}</time>
         </header>
         <div className="post-body">
-          <Suspense fallback={null}>
-            <Body />
-          </Suspense>
+          {Body && (
+            <Suspense fallback={null}>
+              <Body />
+            </Suspense>
+          )}
         </div>
       </article>
       <nav className="post-footer">

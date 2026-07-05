@@ -27,13 +27,16 @@ app/posts/building-this-site/
   arbitrary-number.tsx — interactive components too
 ```
 
-The whole "post registry" is one glob import plus a tiny Vite virtual module
-that reads frontmatter off the filesystem:
+The whole "post registry" is one glob import plus route loaders that read
+frontmatter off the filesystem at build time:
 
 ```ts
-// Metadata comes from a virtual module (filesystem enumeration at build
-// time), so the home page never pulls in post bodies.
-import { posts } from "virtual:posts-meta";
+// In a route loader — runs at build time, so metadata ships as prerendered
+// data for that route only. The JS bundle stays the same size no matter how
+// many posts pile up.
+export function loader() {
+  return { posts: listPosts() };
+}
 
 // Post bodies are only ever imported dynamically — each post (and any
 // interactive components it drags along) is its own chunk.

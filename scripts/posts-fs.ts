@@ -1,6 +1,8 @@
-// Filesystem-based post enumeration for build-time consumers
-// (react-router.config.ts prerender and the RSS feed generator).
-// Runtime code uses app/lib/posts.ts (import.meta.glob) instead.
+// Filesystem-based post enumeration. Single source of truth for post
+// metadata: route loaders (run at build time / in dev), the prerender list
+// in react-router.config.ts, and the RSS feed generator all use this.
+// Paths are cwd-relative because loaders execute from the bundled server
+// build during prerender; all entry points run from the repo root.
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parse } from "yaml";
@@ -13,7 +15,7 @@ export interface FsPost {
   draft: boolean;
 }
 
-const POSTS_DIR = join(import.meta.dirname, "..", "app", "posts");
+const POSTS_DIR = join(process.cwd(), "app", "posts");
 
 export function readPostsFromFs(): FsPost[] {
   if (!existsSync(POSTS_DIR)) return [];

@@ -64,7 +64,7 @@ test.describe("Post Page", () => {
 
   test("shows not-found for unknown post", async ({ page }) => {
     await page.goto("/posts/this-does-not-exist");
-    await expect(page.getByText("Post Not Found")).toBeVisible();
+    await expect(page.getByText("Page Not Found")).toBeVisible();
   });
 });
 

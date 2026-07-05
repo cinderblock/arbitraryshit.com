@@ -29,13 +29,18 @@ effort. Cadence ~weekly.
 
 ## Architecture
 
-- `app/posts/<slug>/index.mdx` — post content; frontmatter exported by remark-mdx-frontmatter
-- `app/lib/posts.ts` — registry: eager glob of frontmatter for listings; lazy glob of components for the post route (code-split per post)
-- `app/routes/post.tsx` — dynamic route `posts/:slug`; build-time loader returns frontmatter (drives meta tags); MDX body lazy-loaded
-- `react-router.config.ts` — `prerender()` enumerates `app/posts/*` dirs via node:fs → `/`, `/posts/<slug>`, plus 404
+Scaling invariant: every page view downloads O(1) data regardless of post count (user requirement, 2026-07-04).
+
+- `app/posts/<slug>/index.mdx` — post content; frontmatter is YAML at the top, parsed only by `scripts/posts-fs.ts` (fs + `yaml`), never imported as a module export
+- `scripts/posts-fs.ts` — single source of truth for metadata (cwd-relative paths — loaders run from the bundled server build). Consumers: prerender list, RSS generator, route loaders
+- `app/lib/posts.server.ts` — loader-side listPosts/getPost (draft-filtered; drafts dev-only)
+- Route **loaders run at build time** (`ssr:false` + prerender) → metadata ships as per-route `.data` files + prerendered HTML, zero bytes in JS bundles. Home loader = full list; post loader = own frontmatter only
+- `app/lib/posts.ts` — client side: lazy `import.meta.glob` of post bodies → one chunk per post, fetched on view
+- `react-router.config.ts` — `prerender()` → `/` + `/posts/<slug>` (drafts excluded)
 - Syntax highlighting: `@shikijs/rehype` at MDX compile time (zero client JS)
-- Interactive elements: plain TSX components imported by the MDX, hydrated client-side (SPA mode ships Scripts)
-- RSS: `scripts/generate-feed.ts` runs as part of `bun run build`, emits `build/client/feed.xml`
+- Interactive elements: plain TSX components imported by the MDX, hydrated client-side
+- RSS: `scripts/generate-feed.ts` in `bun run build`, capped at 20 newest
+- Future levers when home page HTML itself gets big (hundreds of posts): paginate home / add an archive page. Not needed yet.
 
 ## Plan / steps
 
@@ -58,7 +63,8 @@ effort. Cadence ~weekly.
   **Potential conflict**: the Pages handler auto-emits a proxied CNAME for the custom domain (apex → `<project>.pages.dev`); need to check how that interacts with the existing apex cname entry before staging. Do NOT silently delete the hyper.media record — surface it.
 - ssg-base's deploy.yml uses wrangler direct-upload; we deliberately diverge (CF Pages builds).
 - With `ssr: false` + `prerender`, route `loader`s still run at build time for prerendered paths — but we avoid loaders entirely (no `.data` fetch failures on unknown paths); post meta comes from the statically-bundled registry.
-- Eager `import.meta.glob(..., { import: "frontmatter" })` triggers `INEFFECTIVE_DYNAMIC_IMPORT`: the static import drags every post body into the main chunk. Fixed with the `virtual:posts-meta` plugin — never statically import MDX modules.
+- Eager `import.meta.glob(..., { import: "frontmatter" })` triggers `INEFFECTIVE_DYNAMIC_IMPORT`: the static import drags every post body into the main chunk. Never statically import MDX modules. (First fixed with a `virtual:posts-meta` vite plugin; replaced 2026-07-04 with build-time route loaders after user flagged bundle growth — loaders are simpler AND keep metadata out of JS entirely. Verified by grepping `build/client/assets/*.js` for frontmatter text: zero hits.)
+- RR 8 meta functions receive `loaderData`, not `data` (v7 name).
 - ssg-base has no `vite-tsconfig-paths`, so the `~/*` tsconfig alias fails at runtime in dev — use relative imports in app code.
 - Cold dev server: first MDX+shiki compile can exceed RR's SSR stream timeout → "render was aborted" noise + late client re-render. Harmless (build prerender is complete/fine), but interaction tests must retry clicks until hydration attaches handlers (see `tests/home.spec.ts` "hydrates interactive components").
 - YAML parses unquoted `date: 2026-07-04` as a Date object; `scripts/posts-fs.ts` normalizes to string, and post frontmatter uses quoted dates by convention.

@@ -19,9 +19,14 @@ if (!existsSync(OUT_DIR)) {
   throw new Error(`${OUT_DIR} does not exist — run the build first.`);
 }
 
+// Feeds only need recent history; readers that missed more than this are
+// better served by the site itself.
+const FEED_LIMIT = 20;
+
 const posts = readPostsFromFs().filter((post) => !post.draft);
 
 const items = posts
+  .slice(0, FEED_LIMIT)
   .map((post) => {
     const url = `${SITE_URL}/posts/${post.slug}`;
     const pubDate = new Date(`${post.date}T12:00:00Z`).toUTCString();
