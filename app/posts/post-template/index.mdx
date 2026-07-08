@@ -18,8 +18,13 @@ builds-on:
   - building-this-site
 ---
 
-This post is a template (and a living test of the draft + related-post
-machinery — it links to the first post, which shows a backlink here in dev).
+import example from "./example.svg";
+
+This post is a template (and a living test of the draft, cross-link, image,
+and code-highlighting machinery — it links to the first post, which shows a
+backlink here in dev).
+
+## Getting started
 
 To start a new post:
 
@@ -30,6 +35,8 @@ To start a new post:
    noindexed preview). Delete the flag to publish.
 3. Write. Markdown, code blocks, tables all work.
 
+## Images and components
+
 Images live in the folder and get imported:
 
 ```mdx
@@ -38,6 +45,10 @@ import photo from "./photo.jpg";
 <img src={photo} alt="Describe it" />
 ```
 
+Which renders like this:
+
+<img src={example} alt="A placeholder example image colocated with the post" />
+
 Interactive components too — any `.tsx` file in the folder:
 
 ```mdx
@@ -45,6 +56,8 @@ import { Widget } from "./widget";
 
 <Widget />
 ```
+
+## Linking posts
 
 Three ways to link posts together:
 

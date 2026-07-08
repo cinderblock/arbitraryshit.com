@@ -45,15 +45,17 @@ test.describe("Post Page", () => {
   });
 
   test("renders MDX content with highlighted code", async ({ page }) => {
-    await page.goto("/posts/building-this-site");
+    // Machinery fixture: the permanent-draft template exercises headings,
+    // code highlighting, and images regardless of what real posts contain.
+    await page.goto("/posts/post-template");
     await expect(
-      page.getByRole("heading", { name: "Building This Site" }),
+      page.getByRole("heading", { name: "Post Template" }),
     ).toBeVisible();
     await expect(page.locator("pre.shiki").first()).toBeVisible();
   });
 
   test("renders images from the post folder", async ({ page }) => {
-    await page.goto("/posts/building-this-site");
+    await page.goto("/posts/post-template");
     const img = page.locator("article img").first();
     await expect(img).toBeVisible();
   });
@@ -71,15 +73,19 @@ test.describe("Post Page", () => {
     }).toPass();
   });
 
-  test("has a canonical permalink and heading anchors", async ({ page }) => {
+  test("has a canonical permalink", async ({ page }) => {
     await page.goto("/posts/building-this-site");
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       "href",
       "https://arbitraryshit.com/posts/building-this-site",
     );
+  });
+
+  test("gives headings anchor ids for deep links", async ({ page }) => {
+    await page.goto("/posts/post-template");
     await expect(
-      page.getByRole("heading", { name: "The stack" }),
-    ).toHaveAttribute("id", "the-stack");
+      page.getByRole("heading", { name: "Getting started" }),
+    ).toHaveAttribute("id", "getting-started");
   });
 
   test("shows the repo card with stats and pinned commit", async ({ page }) => {
@@ -89,9 +95,7 @@ test.describe("Post Page", () => {
       card.getByRole("link", { name: "cinderblock/arbitraryshit.com" }),
     ).toBeVisible();
     await expect(card.locator(".repo-card-stats")).toContainText("contributor");
-    await expect(card.locator(".repo-card-pin")).toContainText(
-      "Written at c44d67c",
-    );
+    await expect(card.locator(".repo-card-pin")).toContainText("Written at ");
   });
 
   test("links posts directionally via builds-on (dev)", async ({ page }) => {

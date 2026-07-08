@@ -1,84 +1,26 @@
 ---
 title: "Building This Site"
-date: "2026-07-04"
-description: "A bespoke static blog stack: React Router prerendering, MDX posts as folders, and interactive components — no framework-of-the-month."
-# PLACEHOLDER PROSE — draft until rewritten in Cameron's voice (CLAUDE.md:
-# post prose is human-written). All body paragraphs below are AI scaffolding
-# showing what could be covered; the code blocks, diagram, and demo
-# component are fine to keep. Rewrite the prose and this description,
-# update the date, then remove draft: true and this comment.
-draft: true
+date: "2026-07-08"
+description: "Why I finally built a blog — and the handful of fundamentals I built it on."
 github:
   repo: cinderblock/arbitraryshit.com
-  commit: c44d67c20a814743914465408b51387b272f3272
+  commit: 58d917679392c9bf226407e19e41ca73bc5d0b49
 ---
 
 import { ArbitraryNumber } from "./arbitrary-number";
-import pipeline from "./pipeline.svg";
 
-I had a domain sitting around and a pile of little projects with nowhere to
-live. So: a blog. This first post is mostly here to prove the plumbing works —
-text, pictures, source code, and interactive bits.
+I've long thought about a blog. Always wanted to roll my own rather than using
+something like WordPress — that's just who I am. But that was taking too long.
 
-## The stack
+Now good AI is here. So I've wired up this simple website — starting from my own
+[ssg-base](https://github.com/cinderblock/ssg-base) template — based on some
+fundamentals I think are important:
 
-Nothing off the shelf. It's my own `ssg-base` template — React Router in SPA
-mode with every route prerendered to static HTML at build time — plus an MDX
-layer for posts. Bun runs the show, Cloudflare Pages builds and hosts it on
-every push.
+- **HTML, prerendered** — but with full hydration and rich interactions.
+- **Git as the source.**
+- **My voice.** All primary content is written by me, optionally edited by AI.
+  AI-first content is clearly marked.
 
-Each post is just a folder:
-
-```
-app/posts/building-this-site/
-  index.mdx           — this file
-  pipeline.svg        — images live next to the words
-  arbitrary-number.tsx — interactive components too
-```
-
-The whole "post registry" is one glob import plus route loaders that read
-frontmatter off the filesystem at build time:
-
-```ts
-// In a route loader — runs at build time, so metadata ships as prerendered
-// data for that route only. The JS bundle stays the same size no matter how
-// many posts pile up.
-export function loader() {
-  return { posts: listPosts() };
-}
-
-// Post bodies are only ever imported dynamically — each post (and any
-// interactive components it drags along) is its own chunk.
-const bodies = import.meta.glob<{ default: ComponentType }>(
-  "../posts/*/index.mdx",
-);
-```
-
-Everything flows one direction:
-
-<img
-  src={pipeline}
-  alt="Build pipeline: MDX posts through Vite and React Router prerender to static HTML on Cloudflare Pages"
-/>
-
-## Interactive bits
-
-Posts can import React components that hydrate in the browser. Here's the
-site's namesake, an arbitrary number generator:
+That first one, live — a real React component, hydrated in your browser:
 
 <ArbitraryNumber />
-
-That's a plain `.tsx` file sitting in the post's folder. No shortcodes, no
-plugin API — it's just a component.
-
-## The repo card
-
-That box up top comes from two frontmatter lines: the repo name and the
-commit this post was written against. A daily job asks GitHub how far the
-project has drifted since — so if you're reading this months later and the
-card says the repo is fifty commits ahead, trust the repo, not me.
-
-## Writing workflow
-
-There is none, which is the point. Make a folder, write markdown, commit,
-push. Cloudflare builds it. See you next week, probably.

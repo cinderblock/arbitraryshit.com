@@ -64,7 +64,8 @@ Scaling invariant: every page view downloads O(1) data regardless of post count 
 - [x] Stage ops change (pages block in arbitraryshit.yaml); user consented 2026-07-05 ("Yes, push it")
 - [x] Ops pushed (ops@956df57); Cloudflare sync CI green incl. verify step — Pages project + apex CNAME live
 - [x] SITE LIVE 2026-07-05: https://arbitraryshit.com serves 200 (apex via Pages, www→apex 301, feed.xml 200, draft preview URLs 200 with noindex). First 522 was just "project created, no deployment yet" — the plan-update push triggered the first CF Pages build (git integration worked without manual dashboard steps; "Cloudflare Pages" check-run on the commit confirms).
-- [ ] Cameron rewrites first-post prose in his voice, removes draft flag → launch content ← current (only remaining step)
+- [x] FIRST POST PUBLISHED 2026-07-08: Cameron wrote the prose ("Building This Site" — why he built it + 3 fundamentals: prerendered HTML w/ hydration, git source, his voice), AI light-edited, links cinderblock/ssg-base. draft flag removed; pin updated to publish-time HEAD. post-template promoted to the full machinery test fixture (headings/image/code) so machinery tests don't depend on real-post content.
+- [ ] (ongoing) ~weekly posts; each: new folder under app/posts/, human prose, optional builds-on/related links, optional github pin.
 
 ## Findings / gotchas
 
