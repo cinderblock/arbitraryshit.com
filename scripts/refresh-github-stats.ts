@@ -114,9 +114,26 @@ for (const post of readPostsFromFs()) {
 
 const previous = readStatsFile();
 const next: StatsFile = {};
+let failures = 0;
 for (const repo of [...repos.keys()].sort()) {
-  next[repo] = await fetchRepoStats(repo, [...(repos.get(repo) ?? [])].sort());
-  console.log(`${repo}: ${JSON.stringify(next[repo])}`);
+  try {
+    next[repo] = await fetchRepoStats(
+      repo,
+      [...(repos.get(repo) ?? [])].sort(),
+    );
+    console.log(`${repo}: ${JSON.stringify(next[repo])}`);
+  } catch (error) {
+    // A repo that doesn't exist yet (post drafted before the code is pushed)
+    // or a transient API error shouldn't sink the whole refresh. Keep the
+    // last-known stats for that repo, if any, and carry on.
+    failures++;
+    console.warn(`Skipping ${repo}: ${error}`);
+    if (previous[repo]) next[repo] = previous[repo];
+  }
+}
+
+if (failures > 0) {
+  console.warn(`${failures} repo(s) skipped this run.`);
 }
 
 if (withoutFetchedAt(previous) === withoutFetchedAt(next)) {
