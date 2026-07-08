@@ -43,6 +43,9 @@ Words. Markdown. Code blocks get highlighted automatically.
   Vite hashes and copies the asset.
 - **Interactive elements**: export a component from a `.tsx` file in the post
   folder, import it in the MDX, drop it in the prose. It hydrates client-side.
+- **AI-first content**: wrap it in `<AiGenerated>` (available in every post's
+  MDX, no import) so it's visibly — but quietly — marked (tint, accent edge,
+  italic prose, small "AI" mark).
 - **Drafts**: add `draft: true` to the frontmatter. Drafts are listed in dev
   (with a badge); in production they're unlisted — off the home page and
   feed, `noindex` for crawlers — but still built, so the URL works as a

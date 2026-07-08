@@ -57,6 +57,18 @@ import { Widget } from "./widget";
 <Widget />
 ```
 
+## Marking AI content
+
+Primary content is written by you. When a chunk is AI-first — a generated
+demo, a caption, a diagram's blurb — wrap it in `<AiGenerated>` (no import
+needed). It marks the block quietly with a tint, accent edge, and italics:
+
+<AiGenerated>
+
+This paragraph is styled as AI-authored — tinted, accented, and italic.
+
+</AiGenerated>
+
 ## Linking posts
 
 Three ways to link posts together:

@@ -1,14 +1,15 @@
-import type { ComponentType, LazyExoticComponent } from "react";
+import type { LazyExoticComponent } from "react";
 import { lazy, Suspense } from "react";
 import { Link } from "react-router";
+import { mdxComponents } from "../components/mdx-components";
 import { RepoCard } from "../components/repo-card";
 import { getRepoCard } from "../lib/github.server";
-import { formatDate, getPostBody } from "../lib/posts";
+import { formatDate, getPostBody, type PostBody } from "../lib/posts";
 import { getPost, getPostLinks } from "../lib/posts.server";
 import { postUrl } from "../lib/site";
 import type { Route } from "./+types/post";
 
-const bodyCache = new Map<string, LazyExoticComponent<ComponentType>>();
+const bodyCache = new Map<string, LazyExoticComponent<PostBody>>();
 
 function loadBody(slug: string) {
   let Body = bodyCache.get(slug);
@@ -108,7 +109,7 @@ export default function Post({ loaderData }: Route.ComponentProps) {
         <div className="post-body">
           {Body && (
             <Suspense fallback={null}>
-              <Body />
+              <Body components={mdxComponents} />
             </Suspense>
           )}
         </div>

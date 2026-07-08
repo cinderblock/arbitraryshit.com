@@ -16,6 +16,12 @@ Post prose is **human-written** — it's Cameron's voice. AI may:
 
 Never publish AI-authored prose as a post.
 
+When AI-first content is included inline (e.g. a generated demo or caption),
+wrap it in `<AiGenerated>` (available in every post's MDX with no import). It
+marks the block quietly — tinted background, accent edge, italic prose, and a
+small "AI" mark — rather than a loud text banner. Pass `label="…"` to set the
+accessible name.
+
 ## Editing published posts
 
 - **Formatting/mechanical edits** (typos, whitespace, broken links, code

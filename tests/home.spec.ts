@@ -60,6 +60,16 @@ test.describe("Post Page", () => {
     await expect(img).toBeVisible();
   });
 
+  test("marks AI-generated content", async ({ page }) => {
+    await page.goto("/posts/building-this-site");
+    const block = page.locator(".ai-generated");
+    await expect(block).toHaveAttribute("aria-label", /ai-generated/i);
+    // The demo lives inside the marked block.
+    await expect(
+      block.getByRole("button", { name: "Gimme an arbitrary number" }),
+    ).toBeVisible();
+  });
+
   test("hydrates interactive components", async ({ page }) => {
     await page.goto("/posts/building-this-site");
     const button = page.getByRole("button", {
