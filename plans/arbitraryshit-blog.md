@@ -16,6 +16,7 @@ effort. Cadence ~weekly.
   - Zone config already exists: `cloudflare/config/isozilla/arbitraryshit.yaml` (DNS + email routing, **no Pages project yet**)
   - Pages projects declared via `pages:` key on the domain entry; sync CI creates project + custom domain + proxied CNAME
 - Bun 1.3.0 on this machine; gh authed as `cinderblock` (ssh)
+- Cross-project posting: the system-level skill `arbitraryshit-post` (`~/.claude/skills/arbitraryshit-post/`) lets agents in other projects add a post here. Scaffold via `bun ~/.claude/skills/arbitraryshit-post/scripts/new-post.ts` (local-only, no git — deliberately, so it can't hang on an SSH prompt); sync/commit/push are documented git steps the agent runs itself. Enforces the human-prose rule (omit `--body` → draft placeholder). Gotcha found 2026-07-09: PowerShell process startup was hanging machine-wide (both pwsh 7 and WinPS 5 timed out on trivial commands) while bash/bun were fine — that's why the scaffold is a Bun script, not PowerShell.
 
 ## Decisions already made (don't re-ask)
 
