@@ -6,9 +6,9 @@
     "openPRs": 0,
     "contributors": 2,
     "defaultBranch": "master",
-    "headSha": "21c87b4ae093ccc084d70b2c7e610adee033755b",
+    "headSha": "4a2bc6dc59bd2bc92288027e9a561c5fee98580c",
     "aheadBy": {
-      "58d917679392c9bf226407e19e41ca73bc5d0b49": 20
+      "58d917679392c9bf226407e19e41ca73bc5d0b49": 21
     }
   },
   "cinderblock/pandora-desktop": {
@@ -21,6 +21,18 @@
     "headSha": "bce83b9c1cdf1acaf4e0aaa650c9357330d2f6aa",
     "aheadBy": {
       "178a202c60bd8c809be0c0032aba61bf377c2d61": 15
+    }
+  },
+  "cinderblock/plugsight": {
+    "fetchedAt": "2026-07-21",
+    "stars": 0,
+    "openIssues": 0,
+    "openPRs": 0,
+    "contributors": 1,
+    "defaultBranch": "main",
+    "headSha": "23b7fb9c4fdeceedeb1fe56b51e9e8293a15f9d6",
+    "aheadBy": {
+      "23b7fb9c4fdeceedeb1fe56b51e9e8293a15f9d6": 0
     }
   }
 }
