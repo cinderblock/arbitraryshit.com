@@ -1,0 +1,2 @@
+# Cloudflare Pages redirects. Old post perma-URLs -> current slugs.
+/posts/pandora-desktop /posts/jarlid 301
