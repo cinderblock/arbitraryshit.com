@@ -1,2 +1,7 @@
 # Cloudflare Pages redirects. Old post perma-URLs -> current slugs.
-/posts/pandora-desktop /posts/jarlid 301
+# Cover the bare path, the trailing-slash form, and any sub-paths: without
+# the trailing-slash rule the /posts/pandora-desktop/ URL falls through to the
+# SPA fallback and the client tries to load a route chunk that no longer exists.
+/posts/pandora-desktop   /posts/jarlid  301
+/posts/pandora-desktop/  /posts/jarlid  301
+/posts/pandora-desktop/* /posts/jarlid  301
