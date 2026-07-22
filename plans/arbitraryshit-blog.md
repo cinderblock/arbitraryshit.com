@@ -86,6 +86,83 @@ Scaling invariant: every page view downloads O(1) data regardless of post count 
 - Cold dev server: first MDX+shiki compile can exceed RR's SSR stream timeout → "render was aborted" noise + late client re-render. Harmless (build prerender is complete/fine), but interaction tests must retry clicks until hydration attaches handlers (see `tests/home.spec.ts` "hydrates interactive components").
 - YAML parses unquoted `date: 2026-07-04` as a Date object; `scripts/posts-fs.ts` normalizes to string, and post frontmatter uses quoted dates by convention.
 
+## Theme system (2026-07-22, SHIPPED)
+
+Cameron asked to make the site less plain. Built 10 swappable style variants + a live header picker; Cameron chose to ship the switcher as a permanent feature.
+
+- `app/styles/themes.css` — **10** themes as `:root[data-theme="…"]` overrides (inert until the attribute is set): **editorial** (warm paper serif, drop caps), **terminal** (mono phosphor-green, prompt/cursor/`>` prefixes), **brutalist** (thick black borders, hard offset shadows), **aurora** (glass gradient, sticky blurred header, floating cards), **blueprint** (cyan-on-navy graph grid), **synthwave** (neon 80s glow headings, horizon wash), **swiss** (stark white, red accent bar, tight bold), **nord** (muted slate dark, soft cards), **notebook** (ruled paper, red-pen + highlighter), **ink** (luxe dark serif w/ gold, drop caps). System font stacks — no new deps.
+- `app/components/theme-switcher.tsx` — compact `<select>` in the header (`.site-header-right`, before RSS) with a quiet "by ai" tag. Sets `data-theme` on `<html>`, persists explicit picks (incl. "" Default) to `localStorage['styleTheme']`, honors `?theme=<id>`. Styled from theme vars → native look in every theme. Exports `THEME_IDS`/`STORAGE_KEY` so the pre-paint script shares one list.
+- **Random default**: `root.tsx` `themeInit` inline `<head>` script (ships) picks, in order: `?theme=` param → saved pref → **random variant** (re-rolled each visit, never persisted). Runs pre-paint so no flash. `<html suppressHydrationWarning>` silences the expected data-theme hydration diff.
+- `app/components/gradient-background.tsx` — Default theme only: subtle mouse-reactive 3-spot radial gradient ported from cameron.tacklind.com (spring physics via `--gx/--gy` vars). Viewport-fixed layer `:root:not([data-theme]) body::before` in global.css; component animates only when no theme active (MutationObserver), respects `prefers-reduced-motion`, no-ops on touch (no mouse).
+- Names use nbsp (`{"Cameron Tacklind"}`) so they don't wrap mid-name — see the [[nbsp-in-names]] preference. Home subtitle's "personal blog of …" clause removed as redundant with the footer.
+
+Gotchas found: (1) CI only runs **chromium** (`--project=chromium`); the firefox `not-found` test fails on the SPA-fallback client-404 even on clean baseline `bb12a81` — pre-existing dev-only quirk, not CI-gated. (2) DANGER: verifying that baseline used a throwaway git worktree with a **junction** to the main `node_modules`; `git worktree remove --force` followed the junction and deleted `.bin` shims from the REAL node_modules (broke `playwright` → "unknown command 'test'"). Fixed with `bun install --frozen-lockfile`. Never junction node_modules into a worktree you'll `--force` remove — remove the junction (`cmd //c rmdir`) FIRST.
+
+Note: `app/styles/style-option-*.css` (minimal/modern/retro/warm) are a SEPARATE parallel experiment (not from this thread) — left untracked, not part of this feature.
+
+## Feature backlog / ideas (brainstorm 2026-07-22, nothing built)
+
+Cameron asked "what advanced features could/should we add?" — captured here so it
+survives context. Nothing below is committed or decided; ordering is my
+recommendation, not a promise. **Invariant to respect on all of these:** every
+page view stays O(1) regardless of post count — do the work at build time, keep
+client indexes metadata-only and lazy.
+
+Discovery/nav (highest value as post count grows):
+
+- **Tags/topics** — frontmatter `tags: [...]`, prerendered `/tags/<tag>` index
+  routes (same loader pattern as home; tag→posts map is build-time only). Biggest
+  gap once past ~15 posts.
+- **Client-side search** — build-time `search-index.json` over **metadata only**
+  (title/description/tags, NOT bodies), fetched lazily on first keystroke. Full-text
+  would break the invariant — don't.
+- **Archive / all-posts page** — already flagged as a future lever above; cheap,
+  prerendered.
+- **Prev/next post nav** — build-time from the sorted list, ships in the post's `.data`.
+
+Content richness:
+
+- **Reading time + word count** — build-time from MDX, zero client cost.
+- **Table of contents** — already have `rehype-slug`; add `rehype-autolink-headings`
+  - build-time TOC from the heading tree; optional sticky sidebar in wide themes.
+- **Series/multi-part posts** — generalize `builds-on` into a `series:` key ("Part 2
+  of N" + sibling nav).
+- **Auto OG images** — per-post social cards (title+date → PNG at build time via the
+  Playwright we already have). High effort:reward for a shared/public blog; fully static.
+- **Callouts/admonitions** — note/warning/tip MDX components, same quiet styling as
+  `<AiGenerated>`.
+
+Meta/polish:
+
+- **sitemap.xml + `Article` JSON-LD**, **JSON Feed** alongside RSS (trivial given
+  generate-feed.ts), **view-transition** route animations (RR 8 supports it),
+  privacy-respecting **analytics** (CF Web Analytics, no cookie banner).
+
+Comments (Cameron asked 2026-07-22):
+
+- **Recommendation: giscus** — GitHub Discussions-backed, no backend, lazy-loaded
+  iframe (off critical path), git-native fit for a public repo. Alternative:
+  self-hosted CF Workers + D1 (same backend cost as push, less payoff). Only build
+  custom if giscus's GitHub-login requirement is a dealbreaker.
+
+Push notifications of new posts (Cameron asked 2026-07-22) — the one feature that
+breaks "no backend":
+
+- **Requires a service worker → at least a minimal PWA** (SW + web app manifest).
+- **iOS gotcha (matters — Cameron is often on iOS):** Safari on iOS/iPadOS delivers
+  Web Push ONLY if the site is installed to the Home Screen as a PWA. So "push" here
+  realistically means building a **real installable PWA** (manifest, icons,
+  `display: standalone`), not just an SW. Name this cost before committing.
+- **Backend + storage + sender needed:** (1) client subscribes via `PushManager` with
+  a **VAPID** public key; (2) subscriptions stored in Cloudflare **KV or D1** behind a
+  Worker; (3) on publish, a Worker signs+sends web-push to every subscription (VAPID
+  private key). Trigger: cron Worker diffing `feed.xml`, or hook the publish/build step.
+- **Infrastructure → ops repo + per-change consent.** First stateful backend on this
+  site; tiny ongoing cost. Spec separately from the pure-static features.
+- **Cheaper alternatives to weigh first:** RSS already notifies reader users (free);
+  [ntfy.sh](https://ntfy.sh) topic push (near-zero code); email list. Web Push from our
+  own domain is the only one that needs the PWA+Worker build.
+
 ## Open questions for the user
 
 1. Ops consent: OK to commit+push the staged `arbitraryshit.yaml` change? It adds the Pages project (git-connected build of cinderblock/arbitraryshit.com) and **replaces the apex CNAME to `cinderblock.hyper.media`** ("I fixed the internet", ttl 60) with the Pages apex CNAME. The old record is left commented in the file. If hyper.media should survive, it needs a subdomain instead.

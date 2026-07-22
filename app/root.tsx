@@ -10,10 +10,22 @@ import {
 } from "react-router";
 import "@fontsource-variable/inter/index.css";
 import "./styles/global.css";
+import "./styles/themes.css";
+import { GradientBackground } from "./components/gradient-background";
+import {
+  STORAGE_KEY,
+  THEME_IDS,
+  ThemeSwitcher,
+} from "./components/theme-switcher";
+
+// Pre-paint theme selection (avoids a flash): explicit ?theme= wins, then a
+// saved preference, otherwise a random variant re-rolled each visit. Shares the
+// theme list with the switcher so the two never drift.
+const themeInit = `(function(){try{var K=${JSON.stringify(STORAGE_KEY)},I=${JSON.stringify(THEME_IDS)},u=new URLSearchParams(location.search).get("theme"),s=null;try{s=localStorage.getItem(K)}catch(e){}var t=u!=null?u:(s!=null?s:I[Math.floor(Math.random()*I.length)]);if(t)document.documentElement.dataset.theme=t}catch(e){}})()`;
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -35,6 +47,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         />
         <Meta />
         <Links />
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
         {import.meta.env.DEV && (
           <script
             dangerouslySetInnerHTML={{
@@ -44,14 +57,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
         )}
       </head>
       <body>
+        <GradientBackground />
         <header className="site-header">
           <div className="site-header-inner">
             <Link to="/" className="site-name">
               ArbitraryShit<span className="site-tld">.com</span>
             </Link>
-            <a href="/feed.xml" className="rss-link" aria-label="RSS feed">
-              RSS
-            </a>
+            <div className="site-header-right">
+              <ThemeSwitcher />
+              <a href="/feed.xml" className="rss-link" aria-label="RSS feed">
+                RSS
+              </a>
+            </div>
           </div>
         </header>
         {children}
@@ -59,7 +76,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <div className="site-footer-inner">
             <span>
               The personal blog of{" "}
-              <a href="https://cameron.tacklind.com">Cameron Tacklind</a>
+              <a href="https://cameron.tacklind.com">
+                {"Cameron\u00A0Tacklind"}
+              </a>
             </span>
             <a href="https://github.com/cinderblock/arbitraryshit.com">
               Source

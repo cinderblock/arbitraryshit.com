@@ -36,8 +36,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <section className="intro-block">
         <h1>Arbitrary Shit</h1>
         <p className="subtitle">
-          Random little projects, arbitrarily documented — the personal blog of{" "}
-          <a href="https://cameron.tacklind.com">Cameron Tacklind</a>.
+          Random little projects, arbitrarily documented.
         </p>
       </section>
       <section aria-label="Posts">

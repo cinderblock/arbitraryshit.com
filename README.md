@@ -123,6 +123,24 @@ Cloudflare Pages builds from this repo on push to `master`
 and DNS are managed in the ops repo (`cinderblock/ops`,
 `cloudflare/config/isozilla/arbitraryshit.yaml`) — never changed by hand.
 
+## Themes
+
+The site ships ten built-in style variants (Editorial, Terminal, Brutalist,
+Aurora, Blueprint, Synthwave, Swiss, Nord, Notebook, Ink) plus the Default
+look, switchable from the header **Theme** picker. Each is a set of
+`:root[data-theme="…"]` overrides in `app/styles/themes.css` (mostly color
+variables plus a few decorative rules), inert until the attribute is set on
+`<html>` by `app/components/theme-switcher.tsx`.
+
+- **First visit** picks a random variant (re-rolled each visit); choosing one
+  in the picker saves it to `localStorage` for future visits.
+- **`?theme=<id>`** deep-links a specific look (e.g. `?theme=nord`), overriding
+  the saved/random choice — handy for sharing.
+- The initial theme is applied by a tiny inline script in `<head>` (shares the
+  theme list with the picker) so there's no flash before hydration.
+- **Default** has a subtle mouse-reactive gradient (`GradientBackground`, ported
+  from cameron.tacklind.com); each named theme paints its own background.
+
 ## Development tips
 
 - Append `?light` to any URL during development to force light mode.
