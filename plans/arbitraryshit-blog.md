@@ -174,11 +174,11 @@ Implementing the pure-static, no-infra features (comments/push stay parked — n
 consent/DB). Each is its own commit. Invariant held: all work is build-time; loader
 data ships prerendered, not as client JS. Order + status:
 
-- [ ] **Reading time + word count** — computed in `scripts/posts-fs.ts` from the MDX
-      body (strip frontmatter/code/JSX/imports; ~220 wpm, min 1). New FsPost fields
-      `words`, `readingMinutes`. Shown on post header + home items.
-- [ ] **Prev/next post nav** — build-time from the sorted listPosts(); added to post
-      loader, rendered in post footer.
+- [x] **Reading time + word count** (d9732d4) — `readingStats()` in posts-fs; FsPost
+      `words`/`readingMinutes`; "date · N min read" byline on home + post header.
+- [x] **Prev/next post nav** — `getAdjacentPosts()` in posts.server (chronological
+      neighbors in listPosts, newest-first so prev index = newer); post loader +
+      `.post-nav` older/newer cards above the footer. Draft-in-prod has no neighbors.
 - [ ] **Tags** — frontmatter `tags: [...]`; `tagSlug()` helper; prerendered
       `/tags/:tag` route (`routes/tag.tsx`); chips on home + post header. Prerender
       list adds a tag page per unique tag on non-draft posts. (Added sensible tags to

@@ -5,7 +5,7 @@ import { mdxComponents } from "../components/mdx-components";
 import { RepoCard } from "../components/repo-card";
 import { getRepoCard } from "../lib/github.server";
 import { formatDate, getPostBody, type PostBody } from "../lib/posts";
-import { getPost, getPostLinks } from "../lib/posts.server";
+import { getAdjacentPosts, getPost, getPostLinks } from "../lib/posts.server";
 import { postUrl } from "../lib/site";
 import type { Route } from "./+types/post";
 
@@ -32,6 +32,7 @@ export function loader({ params }: Route.LoaderArgs) {
     post,
     github: getRepoCard(post),
     links: getPostLinks(post),
+    adjacent: getAdjacentPosts(post.slug),
   };
 }
 
@@ -83,7 +84,7 @@ function PostLinkList({
 }
 
 export default function Post({ loaderData }: Route.ComponentProps) {
-  const { post, github, links } = loaderData;
+  const { post, github, links, adjacent } = loaderData;
   const Body = loadBody(post.slug);
 
   return (
@@ -130,6 +131,30 @@ export default function Post({ loaderData }: Route.ComponentProps) {
         links={links.related}
         className="related-posts"
       />
+      {(adjacent.newer || adjacent.older) && (
+        <nav className="post-nav" aria-label="More posts">
+          {adjacent.older ? (
+            <Link
+              to={`/posts/${adjacent.older.slug}`}
+              className="post-nav-link post-nav-older"
+            >
+              <span className="post-nav-dir">← Older</span>
+              <span className="post-nav-title">{adjacent.older.title}</span>
+            </Link>
+          ) : (
+            <span />
+          )}
+          {adjacent.newer && (
+            <Link
+              to={`/posts/${adjacent.newer.slug}`}
+              className="post-nav-link post-nav-newer"
+            >
+              <span className="post-nav-dir">Newer →</span>
+              <span className="post-nav-title">{adjacent.newer.title}</span>
+            </Link>
+          )}
+        </nav>
+      )}
       <nav className="post-footer">
         <Link to="/" className="back-link">
           ← All posts

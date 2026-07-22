@@ -27,6 +27,32 @@ export interface PostLink {
   description: string;
 }
 
+export interface AdjacentPosts {
+  /** The next-newer listed post, if any (chronological neighbor). */
+  newer?: PostLink;
+  /** The next-older listed post, if any. */
+  older?: PostLink;
+}
+
+/**
+ * Chronological neighbors of a post within the listing (newest first, so the
+ * previous index is newer). Drafts are excluded, matching the home list; a
+ * draft viewed in production has no neighbors, which is fine.
+ */
+export function getAdjacentPosts(slug: string): AdjacentPosts {
+  const visible = listPosts();
+  const i = visible.findIndex((p) => p.slug === slug);
+  if (i === -1) return {};
+  const toLink = (p?: PostMeta): PostLink | undefined =>
+    p && {
+      slug: p.slug,
+      title: p.title,
+      date: p.date,
+      description: p.description,
+    };
+  return { newer: toLink(visible[i - 1]), older: toLink(visible[i + 1]) };
+}
+
 export interface PostLinks {
   /** Posts this one declares it builds on (directional, from frontmatter). */
   buildsOn: PostLink[];
