@@ -2,10 +2,12 @@
 // these at build time, so post metadata ships as prerendered data per route
 // instead of JavaScript. The client bundle stays the same size no matter how
 // many posts exist.
-import type { FsPost } from "../../scripts/posts-fs";
-import { readPostsFromFs } from "../../scripts/posts-fs";
+import type { FsPost, Heading } from "../../scripts/posts-fs";
+import { getPostHeadings, readPostsFromFs } from "../../scripts/posts-fs";
 
 export type PostMeta = FsPost;
+export type { Heading };
+export { getPostHeadings };
 
 /**
  * Listed posts, newest first. Drafts are listed only in dev; in production

@@ -6,6 +6,7 @@
 // the repo root.
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import GithubSlugger from "github-slugger";
 import { parse } from "yaml";
 
 export interface PostGithub {
@@ -100,6 +101,48 @@ export function readingStats(body: string): {
     words,
     readingMinutes: Math.max(1, Math.round(words / WORDS_PER_MINUTE)),
   };
+}
+
+export interface Heading {
+  /** Markdown heading level (1–6). */
+  depth: number;
+  /** Plain-text heading, inline markdown stripped. */
+  text: string;
+  /** Anchor id — matches rehype-slug (github-slugger) so #links work. */
+  id: string;
+}
+
+/**
+ * ATX headings of an MDX body, with anchor ids matching what rehype-slug
+ * assigns at compile time. Ids are slugged over ALL headings in document
+ * order (a fresh github-slugger per post) so duplicate-heading suffixes line
+ * up with the rendered HTML. Fenced code is stripped first so `#` comments in
+ * code aren't mistaken for headings.
+ */
+export function extractHeadings(body: string): Heading[] {
+  const withoutCode = body.replace(/```[\s\S]*?```/g, "");
+  const slugger = new GithubSlugger();
+  const headings: Heading[] = [];
+  const re = /^(#{1,6})[ \t]+(.+?)[ \t]*#*[ \t]*$/gm;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(withoutCode)) !== null) {
+    const text = match[2]
+      .replace(/`([^`]*)`/g, "$1") // inline code
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1") // links -> text
+      .replace(/[*_]/g, "") // emphasis markers
+      .trim();
+    headings.push({ depth: match[1].length, text, id: slugger.slug(text) });
+  }
+  return headings;
+}
+
+/** Headings for a single post (see extractHeadings). */
+export function getPostHeadings(slug: string): Heading[] {
+  const mdxPath = join(POSTS_DIR, slug, "index.mdx");
+  if (!existsSync(mdxPath)) return [];
+  const source = readFileSync(mdxPath, "utf8");
+  const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  return extractHeadings(match ? source.slice(match[0].length) : source);
 }
 
 export function readPostsFromFs(): FsPost[] {

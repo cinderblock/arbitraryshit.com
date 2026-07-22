@@ -284,6 +284,44 @@ a:focus-visible {
   color: var(--color-text-muted);
 }
 
+/* In-page table of contents (posts with >= 2 headings) */
+.post-toc {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  padding: 0.875rem 1.125rem;
+  margin-bottom: 1.5rem;
+}
+
+.post-toc-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.post-toc ol {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0;
+}
+
+.post-toc-sub {
+  padding-left: 1rem;
+}
+
+.post-toc a {
+  color: var(--color-text-muted);
+}
+
+.post-toc a:hover {
+  color: var(--color-primary);
+}
+
 .post-body > * + * {
   margin-top: 1rem;
 }

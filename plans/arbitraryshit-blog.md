@@ -192,9 +192,13 @@ data ships prerendered, not as client JS. Order + status:
       commit 244050e, NOT caused by this work; CI retries:2 masks it.
 - [x] **Archive page** — `/archive` (routes/archive.tsx), prerendered, posts grouped
       by year; "Archive" link added to the site footer. Draft-filtered. Build verified.
-- [ ] **Table of contents** — build-time ATX heading extraction in posts-fs (strip
-      code fences first; slugs via `github-slugger` to match rehype-slug); renders
-      only when a post has ≥2 h2/h3. Ships in loader data.
+- [x] **Table of contents** — `extractHeadings()`/`getPostHeadings()` in posts-fs
+      (strip code fences; slug all headings in order with `github-slugger` — added as
+      explicit dep — to match rehype-slug's dedup); `<TableOfContents>` renders h2/h3
+      only, only when ≥2. Headings ship via the POST loader only (NOT home/archive/tag
+      listings — keeps those from growing with heading count). Build verified: TOC
+      anchors byte-match rendered heading ids on post-template; absent on 0-heading
+      posts.
 - [ ] **Auto OG images** — satori + @resvg/resvg-js at build time (NOT Playwright —
       no browser dep, reliable in CF Pages). New `scripts/generate-og.ts` in
       `bun run build` → `build/client/og/<slug>.png` (1200×630); post meta adds
