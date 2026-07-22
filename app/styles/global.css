@@ -198,6 +198,20 @@ a:focus-visible {
   color: var(--color-text-muted);
 }
 
+/* Date · reading-time byline, shared by home items and the post header. */
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.post-meta .dot-sep {
+  opacity: 0.6;
+}
+
 .draft-badge {
   display: inline-block;
   font-size: 0.75rem;

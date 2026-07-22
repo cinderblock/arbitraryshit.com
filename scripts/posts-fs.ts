@@ -22,6 +22,10 @@ export interface FsPost {
   github?: PostGithub;
   related: string[];
   buildsOn: string[];
+  /** Approximate prose word count of the post body. */
+  words: number;
+  /** Estimated reading time in whole minutes (>= 1). */
+  readingMinutes: number;
 }
 
 const POSTS_DIR = join(process.cwd(), "app", "posts");
@@ -69,6 +73,33 @@ function parseSlugList(raw: unknown, key: string, mdxPath: string): string[] {
   return raw as string[];
 }
 
+const WORDS_PER_MINUTE = 220;
+
+/**
+ * Rough prose word count of an MDX body, for a reading-time estimate. Strips
+ * the things that aren't prose the reader parses word-by-word: fenced/inline
+ * code, import/export lines, JSX tags, and markdown link/image URL noise. An
+ * estimate, not a measurement — good enough to set expectations.
+ */
+export function readingStats(body: string): {
+  words: number;
+  readingMinutes: number;
+} {
+  const text = body
+    .replace(/```[\s\S]*?```/g, " ") // fenced code
+    .replace(/`[^`]*`/g, " ") // inline code
+    .replace(/^\s*(?:import|export)\s.*$/gm, " ") // MDX import/export
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ") // images
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1") // links -> link text
+    .replace(/<[^>]+>/g, " ") // JSX/HTML tags
+    .replace(/[#>*_~|]/g, " "); // markdown punctuation
+  const words = text.match(/[\p{L}\p{N}][\p{L}\p{N}'-]*/gu)?.length ?? 0;
+  return {
+    words,
+    readingMinutes: Math.max(1, Math.round(words / WORDS_PER_MINUTE)),
+  };
+}
+
 export function readPostsFromFs(): FsPost[] {
   if (!existsSync(POSTS_DIR)) return [];
   return readdirSync(POSTS_DIR, { withFileTypes: true })
@@ -91,6 +122,7 @@ export function readPostsFromFs(): FsPost[] {
           throw new Error(`Missing "${field}" in frontmatter of ${mdxPath}`);
         }
       }
+      const body = source.slice(match[0].length);
       return [
         {
           slug: entry.name,
@@ -105,6 +137,7 @@ export function readPostsFromFs(): FsPost[] {
             "builds-on",
             mdxPath,
           ),
+          ...readingStats(body),
         },
       ];
     })

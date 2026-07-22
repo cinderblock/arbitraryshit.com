@@ -138,13 +138,23 @@ Meta/polish:
   generate-feed.ts), **view-transition** route animations (RR 8 supports it),
   privacy-respecting **analytics** (CF Web Analytics, no cookie banner).
 
-Comments — **PINNED 2026-07-22.** Cameron doesn't want to force a GitHub account, which
-rules out giscus. Every account-free comment system needs either our own backend+DB
-(rejected, see push) or invites spam. Not dead, just parked.
+Comments — **REOPENED 2026-07-22.** Cameron: no forced GitHub account (rules out giscus),
+but he IS open to a database. So the live plan is a **self-hosted CF stack** he fully
+controls. Nothing built; not yet prioritized ("we'll see what makes sense").
 
-- If revisited, the only option that fits "no forced account + no DB + no backend" is a
-  **"reply via email / Mastodon / Bluesky" footer link** (plain `mailto:` + social
-  links; optionally render webmentions later). Lightweight responses, not inline threads.
+- **Shape:** **D1** (SQLite; comments are relational — slug/parent/ts/author/body) + a
+  **Worker** API (`POST /comments`, `GET /comments?post=<slug>`). Post page **lazy-fetches**
+  its own thread client-side → static HTML ships zero comments, so it scales with
+  comments-on-that-post, not total post count. **Invariant intact.**
+- **Infra → ops repo + per-change consent** (Worker + D1 binding + route). First stateful
+  backend on the site.
+- **Open design decisions (settle before building):** (1) **Identity** — anonymous name
+  (spam magnet) / magic-link email / name+optional-email. Lean: name + **Cloudflare
+  Turnstile** (free invisible captcha). (2) **Moderation** — live-post+delete vs. approval
+  queue; low traffic → live+Turnstile likely enough. (3) **Threading** — flat (simple, fine
+  for this volume) vs. nested.
+- Zero-infra fallback if he later sours on the DB: **"reply via email / Mastodon / Bluesky"
+  footer link** (`mailto:` + social; optional webmentions). Lightweight, not inline threads.
 
 Push notifications of new posts — **SHELVED 2026-07-22.** Web Push needs a subscription
 store (Cloudflare KV/D1) = a database + Worker; Cameron: "if it requires a database, not
@@ -156,6 +166,32 @@ worth it." Kept here for the record of _why_ it's out, so it isn't re-proposed:
   the site; ops-repo infra needing per-change consent. All of that is the dealbreaker.
 - **The no-infra version of the same want already exists: RSS.** Reader users get new
   posts for free and we store nothing. (ntfy.sh/email would still need a subscriber list.)
+
+## Feature implementation (in progress, started 2026-07-22)
+
+Cameron: "theme changes done. start implementing the features you highlighted."
+Implementing the pure-static, no-infra features (comments/push stay parked — need
+consent/DB). Each is its own commit. Invariant held: all work is build-time; loader
+data ships prerendered, not as client JS. Order + status:
+
+- [ ] **Reading time + word count** — computed in `scripts/posts-fs.ts` from the MDX
+      body (strip frontmatter/code/JSX/imports; ~220 wpm, min 1). New FsPost fields
+      `words`, `readingMinutes`. Shown on post header + home items.
+- [ ] **Prev/next post nav** — build-time from the sorted listPosts(); added to post
+      loader, rendered in post footer.
+- [ ] **Tags** — frontmatter `tags: [...]`; `tagSlug()` helper; prerendered
+      `/tags/:tag` route (`routes/tag.tsx`); chips on home + post header. Prerender
+      list adds a tag page per unique tag on non-draft posts. (Added sensible tags to
+      existing published posts as metadata scaffolding — Cameron can retune.)
+- [ ] **Archive page** — `/archive` route, prerendered, full grouped-by-year list.
+- [ ] **Table of contents** — build-time ATX heading extraction in posts-fs (strip
+      code fences first; slugs via `github-slugger` to match rehype-slug); renders
+      only when a post has ≥2 h2/h3. Ships in loader data.
+- [ ] **Auto OG images** — satori + @resvg/resvg-js at build time (NOT Playwright —
+      no browser dep, reliable in CF Pages). New `scripts/generate-og.ts` in
+      `bun run build` → `build/client/og/<slug>.png` (1200×630); post meta adds
+      og:image/twitter:image large card. Adds deps (satori, @resvg/resvg-js) + one
+      static Inter ttf. Heaviest; flag dep additions to Cameron.
 
 ## Open questions for the user
 

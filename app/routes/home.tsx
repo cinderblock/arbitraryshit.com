@@ -47,7 +47,13 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               <h2>
                 <Link to={`/posts/${post.slug}`}>{post.title}</Link>
               </h2>
-              <time dateTime={post.date}>{formatDate(post.date)}</time>
+              <p className="post-meta">
+                <time dateTime={post.date}>{formatDate(post.date)}</time>
+                <span className="dot-sep" aria-hidden="true">
+                  ·
+                </span>
+                <span>{post.readingMinutes} min read</span>
+              </p>
               <p>{post.description}</p>
             </li>
           ))}

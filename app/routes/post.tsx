@@ -92,7 +92,13 @@ export default function Post({ loaderData }: Route.ComponentProps) {
         <header className="post-header">
           {post.draft && <span className="draft-badge">draft</span>}
           <h1>{post.title}</h1>
-          <time dateTime={post.date}>{formatDate(post.date)}</time>
+          <p className="post-meta">
+            <time dateTime={post.date}>{formatDate(post.date)}</time>
+            <span className="dot-sep" aria-hidden="true">
+              ·
+            </span>
+            <span>{post.readingMinutes} min read</span>
+          </p>
         </header>
         {github && <RepoCard github={github} />}
         {links.buildsOn.length > 0 && (
