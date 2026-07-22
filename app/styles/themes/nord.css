@@ -1,0 +1,37 @@
+/* Nord — muted cool-blue dark, soft cards. */
+
+:root[data-theme="nord"] {
+  color-scheme: dark;
+  --color-text: #eceff4;
+  --color-text-muted: #9aa5b8;
+  --color-background: #2e3440;
+  --color-surface: #3b4252;
+  --color-border: #434c5e;
+  --color-primary: #88c0d0;
+  --color-primary-hover: #8fbcbb;
+  --color-ai-tint: #3b4252;
+  --color-ai-accent: #81a1c1;
+}
+
+:root[data-theme="nord"] .post-list-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.1rem 1.3rem;
+  transition:
+    border-color 0.16s ease,
+    transform 0.16s ease;
+}
+
+:root[data-theme="nord"] .post-list-item:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+:root[data-theme="nord"] .repo-card {
+  border-radius: 10px;
+}
+
+:root[data-theme="nord"] a {
+  text-underline-offset: 3px;
+}

@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import { THEMES } from "../styles/themes";
 
 /**
- * Header theme picker. Ten style variants live in themes.css, activated by
+ * Header theme picker. Style variants are auto-discovered from
+ * `app/styles/themes/*.css` (see that folder's index.ts) and activated by
  * `data-theme` on <html>.
  *
  * Initial theme is chosen pre-paint by the inline script in root.tsx (which
- * shares THEME_IDS / STORAGE_KEY below), in this order:
+ * shares THEME_IDS / STORAGE_KEY), in this order:
  *   1. `?theme=<id>` URL param (deep-link / share a specific look)
  *   2. a saved preference in localStorage
  *   3. otherwise a random theme — re-rolled every visit until one is chosen
@@ -13,23 +15,6 @@ import { useEffect, useState } from "react";
  */
 
 export const STORAGE_KEY = "styleTheme";
-
-export const THEMES = [
-  { id: "", label: "Default" },
-  { id: "editorial", label: "Editorial" },
-  { id: "terminal", label: "Terminal" },
-  { id: "brutalist", label: "Brutalist" },
-  { id: "aurora", label: "Aurora" },
-  { id: "blueprint", label: "Blueprint" },
-  { id: "synthwave", label: "Synthwave" },
-  { id: "swiss", label: "Swiss" },
-  { id: "nord", label: "Nord" },
-  { id: "notebook", label: "Notebook" },
-  { id: "ink", label: "Ink" },
-] as const;
-
-/** Real themes only (excludes the "" Default) — the pool for the random pick. */
-export const THEME_IDS = THEMES.map((t) => t.id).filter(Boolean);
 
 function apply(id: string) {
   const root = document.documentElement;
@@ -66,6 +51,7 @@ export function ThemeSwitcher() {
         value={active}
         onChange={(e) => choose(e.target.value)}
       >
+        <option value="">Default</option>
         {THEMES.map((t) => (
           <option key={t.id} value={t.id}>
             {t.label}

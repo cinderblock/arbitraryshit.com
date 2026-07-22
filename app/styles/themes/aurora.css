@@ -1,0 +1,98 @@
+/* Aurora — soft glass, gradient headings, floating cards. */
+
+:root[data-theme="aurora"] {
+  color-scheme: light;
+  --color-text: #1a1730;
+  --color-text-muted: #6b6690;
+  --color-background: #f4f2ff;
+  --color-surface: #ffffff;
+  --color-border: #e6e2f7;
+  --color-primary: #6d4aff;
+  --color-primary-hover: #5a37e0;
+  --color-ai-tint: #f0ecff;
+  --color-ai-accent: #8b5cf6;
+  --aurora-grad: linear-gradient(115deg, #6d4aff 0%, #c04bff 55%, #ff5db1 100%);
+}
+
+/* Ambient gradient wash behind everything. */
+:root[data-theme="aurora"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(
+      42rem 30rem at 12% -8%,
+      rgba(109, 74, 255, 0.18),
+      transparent 60%
+    ),
+    radial-gradient(
+      38rem 30rem at 100% 0%,
+      rgba(255, 93, 177, 0.16),
+      transparent 55%
+    ),
+    radial-gradient(
+      50rem 40rem at 70% 110%,
+      rgba(75, 190, 255, 0.14),
+      transparent 60%
+    );
+}
+
+/* Frosted sticky header. */
+:root[data-theme="aurora"] .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid rgba(230, 226, 247, 0.7);
+  background: rgba(244, 242, 255, 0.72);
+  backdrop-filter: saturate(1.4) blur(12px);
+  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+}
+
+/* Gradient display type. */
+:root[data-theme="aurora"] .site-name,
+:root[data-theme="aurora"] .intro-block h1,
+:root[data-theme="aurora"] .post-header h1,
+:root[data-theme="aurora"] .hero h1 {
+  background: var(--aurora-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+:root[data-theme="aurora"] .site-tld {
+  -webkit-text-fill-color: initial;
+  color: var(--color-text-muted);
+}
+
+/* Floating cards. */
+:root[data-theme="aurora"] .post-list-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 1.25rem 1.4rem;
+  box-shadow: 0 10px 30px -18px rgba(60, 40, 120, 0.45);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+:root[data-theme="aurora"] .post-list-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 45px -20px rgba(90, 55, 224, 0.5);
+}
+
+:root[data-theme="aurora"] .repo-card {
+  border-radius: 16px;
+  box-shadow: 0 12px 34px -20px rgba(60, 40, 120, 0.5);
+}
+
+:root[data-theme="aurora"] .post-body pre.shiki {
+  border-radius: 14px;
+  box-shadow: 0 14px 34px -20px rgba(60, 40, 120, 0.4);
+}
+
+:root[data-theme="aurora"] .draft-badge {
+  background: var(--aurora-grad);
+  color: #fff;
+}

@@ -1,0 +1,63 @@
+/* Ink — luxe dark serif with gold. */
+
+:root[data-theme="ink"] {
+  color-scheme: dark;
+  --font-display:
+    "Iowan Old Style", "Palatino Linotype", Palatino, Georgia,
+    "Times New Roman", serif;
+  --color-text: #ece7de;
+  --color-text-muted: #9c968a;
+  --color-background: #14130f;
+  --color-surface: #1d1b16;
+  --color-border: #35322a;
+  --color-primary: #c9a24b;
+  --color-primary-hover: #e0be6b;
+  --color-ai-tint: #1d1b16;
+  --color-ai-accent: #c9a24b;
+}
+
+:root[data-theme="ink"] .site-header {
+  border-bottom: 1px solid var(--color-primary);
+}
+
+:root[data-theme="ink"] .site-name,
+:root[data-theme="ink"] .intro-block h1,
+:root[data-theme="ink"] .post-header h1,
+:root[data-theme="ink"] .post-list-item h2,
+:root[data-theme="ink"] .post-body h2,
+:root[data-theme="ink"] .post-body h3,
+:root[data-theme="ink"] .hero h1 {
+  font-family: var(--font-display);
+  letter-spacing: 0;
+  font-weight: 600;
+}
+
+:root[data-theme="ink"] .post-list {
+  gap: 0;
+}
+
+:root[data-theme="ink"] .post-list-item {
+  padding: 1.75rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+:root[data-theme="ink"] .post-list-item:first-child {
+  border-top: 1px solid var(--color-border);
+}
+
+:root[data-theme="ink"] .post-list-item time {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  color: var(--color-primary);
+}
+
+/* Gold serif drop cap. */
+:root[data-theme="ink"] .post-body > p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  font-size: 3.1em;
+  float: left;
+  line-height: 0.78;
+  padding: 0.05em 0.08em 0 0;
+  color: var(--color-primary);
+}

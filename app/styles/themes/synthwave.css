@@ -1,0 +1,63 @@
+/* Synthwave — neon 80s, glow headings, horizon wash. */
+
+:root[data-theme="synthwave"] {
+  color-scheme: dark;
+  --color-text: #f5d9ff;
+  --color-text-muted: #b483d6;
+  --color-background: #1a0b2e;
+  --color-surface: #24123f;
+  --color-border: #46216b;
+  --color-primary: #ff5db1;
+  --color-primary-hover: #ff8ad0;
+  --color-ai-tint: #24123f;
+  --color-ai-accent: #22d3ee;
+  --sw-grad: linear-gradient(90deg, #ff5db1, #22d3ee);
+}
+
+:root[data-theme="synthwave"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(
+      60rem 26rem at 50% 118%,
+      rgba(255, 93, 177, 0.3),
+      transparent 62%
+    ),
+    linear-gradient(180deg, #1a0b2e 0%, #2a0f45 100%);
+}
+
+:root[data-theme="synthwave"] .intro-block h1,
+:root[data-theme="synthwave"] .post-header h1,
+:root[data-theme="synthwave"] .hero h1 {
+  background: var(--sw-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 14px rgba(255, 93, 177, 0.45));
+}
+
+:root[data-theme="synthwave"] .post-list-item {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.1rem 1.3rem;
+  background: rgba(36, 18, 63, 0.5);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+:root[data-theme="synthwave"] .post-list-item:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 24px -4px rgba(255, 93, 177, 0.45);
+}
+
+:root[data-theme="synthwave"] a {
+  color: var(--color-ai-accent);
+}
+
+:root[data-theme="synthwave"] .draft-badge {
+  background: var(--sw-grad);
+  color: #14040f;
+}

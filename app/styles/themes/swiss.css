@@ -1,0 +1,60 @@
+/* Swiss — stark white, red accent bar, tight bold type. */
+
+:root[data-theme="swiss"] {
+  color-scheme: light;
+  --font-sans: "Inter Variable", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --color-text: #111111;
+  --color-text-muted: #666666;
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-border: #111111;
+  --color-primary: #e2001a;
+  --color-primary-hover: #b30015;
+  --color-ai-tint: #f4f4f4;
+  --color-ai-accent: #e2001a;
+}
+
+:root[data-theme="swiss"] .site-header {
+  border-bottom: 1px solid #111;
+}
+
+:root[data-theme="swiss"] .intro-block h1,
+:root[data-theme="swiss"] .post-header h1,
+:root[data-theme="swiss"] .hero h1 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+/* Signature red accent bar above the lead heading. */
+:root[data-theme="swiss"] .intro-block h1::before,
+:root[data-theme="swiss"] .post-header h1::before {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 6px;
+  background: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+:root[data-theme="swiss"] .post-list {
+  gap: 0;
+}
+
+:root[data-theme="swiss"] .post-list-item {
+  padding: 1.5rem 0;
+  border-top: 1px solid #111;
+}
+
+:root[data-theme="swiss"] .post-list-item h2 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+:root[data-theme="swiss"] .post-list-item time {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.72rem;
+}

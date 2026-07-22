@@ -10,13 +10,10 @@ import {
 } from "react-router";
 import "@fontsource-variable/inter/index.css";
 import "./styles/global.css";
-import "./styles/themes.css";
+// Importing the theme registry also bundles every theme's CSS (eager glob).
+import { THEME_IDS } from "./styles/themes";
 import { GradientBackground } from "./components/gradient-background";
-import {
-  STORAGE_KEY,
-  THEME_IDS,
-  ThemeSwitcher,
-} from "./components/theme-switcher";
+import { STORAGE_KEY, ThemeSwitcher } from "./components/theme-switcher";
 
 // Pre-paint theme selection (avoids a flash): explicit ?theme= wins, then a
 // saved preference, otherwise a random variant re-rolled each visit. Shares the

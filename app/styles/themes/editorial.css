@@ -1,0 +1,73 @@
+/* Editorial — warm paper, serif display, drop caps. */
+
+:root[data-theme="editorial"] {
+  color-scheme: light;
+  --font-display:
+    "Iowan Old Style", "Palatino Linotype", Palatino, Georgia,
+    "Times New Roman", serif;
+  --color-text: #26221c;
+  --color-text-muted: #6f6455;
+  --color-background: #f7f2e9;
+  --color-surface: #fffdf8;
+  --color-border: #e4dccb;
+  --color-primary: #b4491f;
+  --color-primary-hover: #8f3714;
+  --color-ai-tint: #f1ead9;
+  --color-ai-accent: #9a6a3a;
+}
+
+:root[data-theme="editorial"] .site-header {
+  border-bottom: 2px solid var(--color-text);
+}
+
+:root[data-theme="editorial"] .site-name,
+:root[data-theme="editorial"] .intro-block h1,
+:root[data-theme="editorial"] .post-header h1,
+:root[data-theme="editorial"] .post-list-item h2,
+:root[data-theme="editorial"] .post-body h2,
+:root[data-theme="editorial"] .post-body h3,
+:root[data-theme="editorial"] .hero h1 {
+  font-family: var(--font-display);
+  letter-spacing: 0;
+}
+
+:root[data-theme="editorial"] .intro-block h1,
+:root[data-theme="editorial"] .post-header h1 {
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+:root[data-theme="editorial"] .subtitle,
+:root[data-theme="editorial"] .post-header time {
+  font-style: italic;
+}
+
+/* List becomes a run of ruled entries rather than gapped blocks. */
+:root[data-theme="editorial"] .post-list {
+  gap: 0;
+}
+
+:root[data-theme="editorial"] .post-list-item {
+  padding: 1.75rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+:root[data-theme="editorial"] .post-list-item:first-child {
+  border-top: 1px solid var(--color-border);
+}
+
+:root[data-theme="editorial"] .post-list-item time {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+}
+
+/* Drop cap on the opening paragraph. */
+:root[data-theme="editorial"] .post-body > p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  font-size: 3.1em;
+  float: left;
+  line-height: 0.78;
+  padding: 0.05em 0.08em 0 0;
+  color: var(--color-primary);
+}

@@ -127,10 +127,17 @@ and DNS are managed in the ops repo (`cinderblock/ops`,
 
 The site ships ten built-in style variants (Editorial, Terminal, Brutalist,
 Aurora, Blueprint, Synthwave, Swiss, Nord, Notebook, Ink) plus the Default
-look, switchable from the header **Theme** picker. Each is a set of
-`:root[data-theme="…"]` overrides in `app/styles/themes.css` (mostly color
-variables plus a few decorative rules), inert until the attribute is set on
-`<html>` by `app/components/theme-switcher.tsx`.
+look, switchable from the header **Theme** picker. Each variant is one file in
+`app/styles/themes/` — a set of `:root[data-theme="<id>"]` overrides (mostly
+color variables plus a few decorative rules), inert until the attribute is set
+on `<html>` by `app/components/theme-switcher.tsx`.
+
+- **Adding/removing a theme is a file operation.** Drop `app/styles/themes/<id>.css`
+  (rules targeting `:root[data-theme="<id>"]` — the filename _is_ the id) and it's
+  bundled and listed in the picker automatically; delete the file to remove it.
+  `app/styles/themes/index.ts` auto-discovers them with `import.meta.glob`, so
+  there's no central list to edit. Themes list alphabetically; the label is the id
+  capitalized.
 
 - **First visit** picks a random variant (re-rolled each visit); choosing one
   in the picker saves it to `localStorage` for future visits.

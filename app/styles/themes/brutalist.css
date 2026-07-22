@@ -1,0 +1,76 @@
+/* Brutalist — thick black borders, hard offset shadows. */
+
+:root[data-theme="brutalist"] {
+  color-scheme: light;
+  --color-text: #111111;
+  --color-text-muted: #444444;
+  --color-background: #faf4e6;
+  --color-surface: #ffffff;
+  --color-border: #111111;
+  --color-primary: #1a53ff;
+  --color-primary-hover: #0033cc;
+  --color-ai-tint: #fff7bf;
+  --color-ai-accent: #111111;
+}
+
+:root[data-theme="brutalist"] .site-header {
+  border-bottom: 3px solid #111;
+}
+
+:root[data-theme="brutalist"] .site-name,
+:root[data-theme="brutalist"] .intro-block h1,
+:root[data-theme="brutalist"] .post-header h1,
+:root[data-theme="brutalist"] .hero h1 {
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 0.98;
+}
+
+/* Cards: hard border + solid offset shadow, nudged on hover. */
+:root[data-theme="brutalist"] .post-list-item {
+  background: var(--color-surface);
+  border: 3px solid #111;
+  border-radius: 0;
+  padding: 1.1rem 1.25rem;
+  box-shadow: 6px 6px 0 #111;
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease;
+}
+
+:root[data-theme="brutalist"] .post-list-item:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 var(--color-primary);
+}
+
+:root[data-theme="brutalist"] .post-list-item h2 a:hover {
+  color: #111;
+}
+
+/* Marker-highlight link hovers. */
+:root[data-theme="brutalist"] a:hover {
+  background: #ffe600;
+  color: #111;
+  text-decoration: none;
+  box-shadow: 0 0 0 2px #ffe600;
+}
+
+:root[data-theme="brutalist"] .repo-card,
+:root[data-theme="brutalist"] .post-body pre.shiki {
+  border: 3px solid #111 !important;
+  border-radius: 0;
+  box-shadow: 5px 5px 0 #111;
+}
+
+:root[data-theme="brutalist"] .post-body blockquote {
+  border-left: 6px solid #111;
+  background: var(--color-surface);
+  padding: 0.75rem 1rem;
+}
+
+:root[data-theme="brutalist"] .draft-badge {
+  background: #111;
+  color: #ffe600;
+  border-radius: 0;
+}

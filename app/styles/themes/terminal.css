@@ -1,0 +1,71 @@
+/* Terminal — monospace, phosphor green on near-black. */
+
+:root[data-theme="terminal"] {
+  color-scheme: dark;
+  --font-sans:
+    ui-monospace, "JetBrains Mono", "Fira Code", "SF Mono", Consolas, monospace;
+  --font-mono: var(--font-sans);
+  --color-text: #c8d3cc;
+  --color-text-muted: #6e8577;
+  --color-background: #0a0f0c;
+  --color-surface: #0f1712;
+  --color-border: #1f3327;
+  --color-primary: #3ddc84;
+  --color-primary-hover: #6ef2a6;
+  --color-ai-tint: #12211a;
+  --color-ai-accent: #4fd1c5;
+}
+
+:root[data-theme="terminal"] * {
+  border-radius: 0 !important;
+}
+
+:root[data-theme="terminal"] ::selection {
+  background: rgba(61, 220, 132, 0.3);
+}
+
+/* Prompt-style site name. */
+:root[data-theme="terminal"] .site-name::before {
+  content: "~/ ";
+  color: var(--color-text-muted);
+}
+
+:root[data-theme="terminal"] .rss-link::before {
+  content: "[";
+}
+:root[data-theme="terminal"] .rss-link::after {
+  content: "]";
+}
+
+/* Blinking cursor after the home heading. */
+:root[data-theme="terminal"] .intro-block h1::after {
+  content: "_";
+  color: var(--color-primary);
+  animation: terminal-blink 1.1s steps(1) infinite;
+}
+
+@keyframes terminal-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Markdown-in-terminal heading prefixes. */
+:root[data-theme="terminal"] .post-list-item h2 a::before {
+  content: "> ";
+  color: var(--color-primary);
+}
+:root[data-theme="terminal"] .post-body h2::before {
+  content: "## ";
+  color: var(--color-text-muted);
+}
+:root[data-theme="terminal"] .post-body h3::before {
+  content: "### ";
+  color: var(--color-text-muted);
+}
+
+:root[data-theme="terminal"] a {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}

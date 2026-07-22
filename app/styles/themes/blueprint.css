@@ -1,0 +1,55 @@
+/* Blueprint — cyan drafting lines on deep navy. */
+
+:root[data-theme="blueprint"] {
+  color-scheme: dark;
+  --color-text: #dbeafe;
+  --color-text-muted: #7ea6d8;
+  --color-background: #0b2545;
+  --color-surface: #10305c;
+  --color-border: #2f5a8f;
+  --color-primary: #7fdbff;
+  --color-primary-hover: #b3ecff;
+  --color-ai-tint: #10305c;
+  --color-ai-accent: #7fdbff;
+}
+
+/* Graph-paper grid behind everything. */
+:root[data-theme="blueprint"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(127, 219, 255, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(127, 219, 255, 0.09) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+:root[data-theme="blueprint"] .site-header {
+  border-bottom: 1px solid var(--color-primary);
+}
+
+:root[data-theme="blueprint"] .site-name,
+:root[data-theme="blueprint"] .intro-block h1,
+:root[data-theme="blueprint"] .post-header h1,
+:root[data-theme="blueprint"] .post-list-item h2,
+:root[data-theme="blueprint"] .post-body h2 {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+:root[data-theme="blueprint"] a {
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-underline-offset: 3px;
+}
+
+:root[data-theme="blueprint"] .post-list-item {
+  border-left: 2px solid var(--color-border);
+  padding-left: 1rem;
+}
+
+:root[data-theme="blueprint"] .post-list-item:hover {
+  border-left-color: var(--color-primary);
+}
