@@ -138,30 +138,24 @@ Meta/polish:
   generate-feed.ts), **view-transition** route animations (RR 8 supports it),
   privacy-respecting **analytics** (CF Web Analytics, no cookie banner).
 
-Comments (Cameron asked 2026-07-22):
+Comments — **PINNED 2026-07-22.** Cameron doesn't want to force a GitHub account, which
+rules out giscus. Every account-free comment system needs either our own backend+DB
+(rejected, see push) or invites spam. Not dead, just parked.
 
-- **Recommendation: giscus** — GitHub Discussions-backed, no backend, lazy-loaded
-  iframe (off critical path), git-native fit for a public repo. Alternative:
-  self-hosted CF Workers + D1 (same backend cost as push, less payoff). Only build
-  custom if giscus's GitHub-login requirement is a dealbreaker.
+- If revisited, the only option that fits "no forced account + no DB + no backend" is a
+  **"reply via email / Mastodon / Bluesky" footer link** (plain `mailto:` + social
+  links; optionally render webmentions later). Lightweight responses, not inline threads.
 
-Push notifications of new posts (Cameron asked 2026-07-22) — the one feature that
-breaks "no backend":
+Push notifications of new posts — **SHELVED 2026-07-22.** Web Push needs a subscription
+store (Cloudflare KV/D1) = a database + Worker; Cameron: "if it requires a database, not
+worth it." Kept here for the record of _why_ it's out, so it isn't re-proposed:
 
-- **Requires a service worker → at least a minimal PWA** (SW + web app manifest).
-- **iOS gotcha (matters — Cameron is often on iOS):** Safari on iOS/iPadOS delivers
-  Web Push ONLY if the site is installed to the Home Screen as a PWA. So "push" here
-  realistically means building a **real installable PWA** (manifest, icons,
-  `display: standalone`), not just an SW. Name this cost before committing.
-- **Backend + storage + sender needed:** (1) client subscribes via `PushManager` with
-  a **VAPID** public key; (2) subscriptions stored in Cloudflare **KV or D1** behind a
-  Worker; (3) on publish, a Worker signs+sends web-push to every subscription (VAPID
-  private key). Trigger: cron Worker diffing `feed.xml`, or hook the publish/build step.
-- **Infrastructure → ops repo + per-change consent.** First stateful backend on this
-  site; tiny ongoing cost. Spec separately from the pure-static features.
-- **Cheaper alternatives to weigh first:** RSS already notifies reader users (free);
-  [ntfy.sh](https://ntfy.sh) topic push (near-zero code); email list. Web Push from our
-  own domain is the only one that needs the PWA+Worker build.
+- Would require a service worker → a **real installable PWA** (iOS Safari only delivers
+  Web Push to Home-Screen-installed PWAs; Cameron is often on iOS), **plus** VAPID keys +
+  a Worker + KV/D1 to store subscriptions and send on publish. First stateful backend on
+  the site; ops-repo infra needing per-change consent. All of that is the dealbreaker.
+- **The no-infra version of the same want already exists: RSS.** Reader users get new
+  posts for free and we store nothing. (ntfy.sh/email would still need a subscriber list.)
 
 ## Open questions for the user
 
