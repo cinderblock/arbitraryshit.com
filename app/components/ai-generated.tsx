@@ -16,7 +16,7 @@ export function AiGenerated({
 }) {
   return (
     <aside className="ai-generated" aria-label={label}>
-      <span className="ai-generated-mark" aria-hidden="true">
+      <span className="ai-generated-mark ai-mark" aria-hidden="true">
         AI
       </span>
       <div className="ai-generated-body">{children}</div>

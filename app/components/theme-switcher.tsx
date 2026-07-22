@@ -72,7 +72,7 @@ export function ThemeSwitcher() {
           </option>
         ))}
       </select>
-      <span className="theme-switcher-ai">by ai</span>
+      <span className="ai-mark">AI</span>
     </div>
   );
 }

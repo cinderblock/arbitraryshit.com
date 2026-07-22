@@ -387,16 +387,20 @@ a:focus-visible {
   margin: 1.5rem 0;
 }
 
-.ai-generated-mark {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.75rem;
+/* Shared quiet "AI" mark — used by AiGenerated and the theme picker. */
+.ai-mark {
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   color: var(--color-ai-accent);
   opacity: 0.75;
   user-select: none;
+}
+
+.ai-generated-mark {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
 }
 
 /* Italicize AI prose; leave interactive/embedded elements upright. */
@@ -521,16 +525,6 @@ code {
 .theme-switcher select:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
-}
-
-/* Quiet "by ai" credit next to the picker (these themes are AI-built). */
-.theme-switcher-ai {
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: var(--color-ai-accent);
-  opacity: 0.85;
-  user-select: none;
 }
 
 /* Reclaim header space on small screens; the select speaks for itself. */
