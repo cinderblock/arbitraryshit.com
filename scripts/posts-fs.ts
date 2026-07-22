@@ -22,6 +22,8 @@ export interface FsPost {
   github?: PostGithub;
   related: string[];
   buildsOn: string[];
+  /** Free-form topic tags (display strings; slugified for URLs). */
+  tags: string[];
   /** Approximate prose word count of the post body. */
   words: number;
   /** Estimated reading time in whole minutes (>= 1). */
@@ -65,10 +67,10 @@ function parseGithub(raw: unknown, mdxPath: string): PostGithub | undefined {
   return github;
 }
 
-function parseSlugList(raw: unknown, key: string, mdxPath: string): string[] {
+function parseStringList(raw: unknown, key: string, mdxPath: string): string[] {
   if (raw === undefined) return [];
   if (!Array.isArray(raw) || raw.some((entry) => typeof entry !== "string")) {
-    throw new Error(`"${key}" must be a list of post slugs in ${mdxPath}`);
+    throw new Error(`"${key}" must be a list of strings in ${mdxPath}`);
   }
   return raw as string[];
 }
@@ -131,12 +133,13 @@ export function readPostsFromFs(): FsPost[] {
           description: frontmatter.description as string,
           draft: frontmatter.draft === true,
           github: parseGithub(frontmatter.github, mdxPath),
-          related: parseSlugList(frontmatter.related, "related", mdxPath),
-          buildsOn: parseSlugList(
+          related: parseStringList(frontmatter.related, "related", mdxPath),
+          buildsOn: parseStringList(
             frontmatter["builds-on"],
             "builds-on",
             mdxPath,
           ),
+          tags: parseStringList(frontmatter.tags, "tags", mdxPath),
           ...readingStats(body),
         },
       ];

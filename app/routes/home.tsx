@@ -1,5 +1,6 @@
 import type { MetaFunction } from "react-router";
 import { Link } from "react-router";
+import { TagList } from "../components/tag-list";
 import { formatDate } from "../lib/posts";
 import { listPosts } from "../lib/posts.server";
 import { SITE_URL } from "../lib/site";
@@ -55,6 +56,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                 <span>{post.readingMinutes} min read</span>
               </p>
               <p>{post.description}</p>
+              <TagList tags={post.tags} />
             </li>
           ))}
         </ul>

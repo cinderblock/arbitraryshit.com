@@ -1,4 +1,5 @@
 import type { Config } from "@react-router/dev/config";
+import { tagSlug } from "./app/lib/tags";
 import { readPostsFromFs } from "./scripts/posts-fs";
 
 export default {
@@ -9,6 +10,20 @@ export default {
     // loader but no paths). Drafts are prerendered as unlisted, noindexed
     // preview pages — hidden from the home page and feed, not from the URL.
     const posts = readPostsFromFs();
-    return ["/", ...posts.map((post) => `/posts/${post.slug}`)];
+    // Tag pages only for tags on listed (non-draft) posts, so every tag page
+    // has at least one visible post. (Keep drafts' tags overlapping published
+    // ones if their chips should resolve.)
+    const tagSlugs = [
+      ...new Set(
+        posts
+          .filter((post) => !post.draft)
+          .flatMap((post) => post.tags.map(tagSlug)),
+      ),
+    ];
+    return [
+      "/",
+      ...posts.map((post) => `/posts/${post.slug}`),
+      ...tagSlugs.map((slug) => `/tags/${slug}`),
+    ];
   },
 } satisfies Config;

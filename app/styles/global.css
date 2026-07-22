@@ -225,6 +225,47 @@ a:focus-visible {
   margin-bottom: 0.25rem;
 }
 
+/* Tag chips (home items, post headers, tag pages) */
+
+.tag-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-top: 0.5rem;
+}
+
+.tag-chip {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.3rem 0.6rem;
+}
+
+.tag-chip:hover {
+  text-decoration: none;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.post-header-tags {
+  margin-top: 0.75rem;
+}
+
+/* "Tag" / section eyebrow above a page title. */
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
 /* Post page */
 
 .post-header {

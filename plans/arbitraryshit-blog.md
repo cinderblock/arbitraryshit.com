@@ -179,10 +179,17 @@ data ships prerendered, not as client JS. Order + status:
 - [x] **Prev/next post nav** — `getAdjacentPosts()` in posts.server (chronological
       neighbors in listPosts, newest-first so prev index = newer); post loader +
       `.post-nav` older/newer cards above the footer. Draft-in-prod has no neighbors.
-- [ ] **Tags** — frontmatter `tags: [...]`; `tagSlug()` helper; prerendered
-      `/tags/:tag` route (`routes/tag.tsx`); chips on home + post header. Prerender
-      list adds a tag page per unique tag on non-draft posts. (Added sensible tags to
-      existing published posts as metadata scaffolding — Cameron can retune.)
+- [x] **Tags** — frontmatter `tags: [...]`; `tagSlug()` (app/lib/tags.ts, client-safe);
+      `<TagList>` chips on home/post/tag pages; prerendered `/tags/:tag` (routes/tag.tsx).
+      Prerender list = tag pages for tags on non-draft posts only, so every tag page has
+      ≥1 visible post. Draft (post-template) tags kept overlapping published ones
+      (meta/web) so its chips resolve. Added tags to published posts as metadata
+      scaffolding — Cameron can retune: plugsight[windows,usb,tools,ai],
+      jarlid[desktop-app,music,ai], building-this-site[web,meta]. Build verified: 8 tag
+      pages prerendered, shared `ai`/`web`/`meta` pages list all their posts.
+      NOTE: pre-existing firefox-only flake on the "unknown post 404" test (dev SPA
+      fallback renders generic boundary instead of 404) — confirmed present on base
+      commit 244050e, NOT caused by this work; CI retries:2 masks it.
 - [ ] **Archive page** — `/archive` route, prerendered, full grouped-by-year list.
 - [ ] **Table of contents** — build-time ATX heading extraction in posts-fs (strip
       code fences first; slugs via `github-slugger` to match rehype-slug); renders

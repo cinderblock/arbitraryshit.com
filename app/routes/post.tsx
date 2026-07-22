@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import { Link } from "react-router";
 import { mdxComponents } from "../components/mdx-components";
 import { RepoCard } from "../components/repo-card";
+import { TagList } from "../components/tag-list";
 import { getRepoCard } from "../lib/github.server";
 import { formatDate, getPostBody, type PostBody } from "../lib/posts";
 import { getAdjacentPosts, getPost, getPostLinks } from "../lib/posts.server";
@@ -100,6 +101,7 @@ export default function Post({ loaderData }: Route.ComponentProps) {
             </span>
             <span>{post.readingMinutes} min read</span>
           </p>
+          <TagList tags={post.tags} className="post-header-tags" />
         </header>
         {github && <RepoCard github={github} />}
         {links.buildsOn.length > 0 && (
