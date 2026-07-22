@@ -1,6 +1,6 @@
 import type { LazyExoticComponent } from "react";
 import { lazy, Suspense } from "react";
-import { Link } from "react-router";
+import { isRouteErrorResponse, Link, useRouteError } from "react-router";
 import { mdxComponents } from "../components/mdx-components";
 import { RepoCard } from "../components/repo-card";
 import { TableOfContents } from "../components/table-of-contents";
@@ -70,6 +70,31 @@ export const meta: Route.MetaFunction = ({ loaderData }) => {
     { name: "twitter:image", content: image },
   ];
 };
+
+// Post-route error boundary. An unknown slug is never prerendered, so it
+// falls here. The loader throws a 404 Response, but in dev with ssr:false the
+// error can surface as a plain Error instead (framework quirk, browser-
+// dependent) — so we don't gate the message on isRouteErrorResponse. Any
+// non-404 status is still surfaced for real failures.
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const status = isRouteErrorResponse(error) ? error.status : null;
+  console.error("Post route error:", error);
+  const notFound = status === null || status === 404;
+  return (
+    <main className="container">
+      <section className="hero">
+        <h1>{notFound ? "404" : status}</h1>
+        <p className="tagline">
+          {notFound ? "Page Not Found" : "Something went wrong"}
+        </p>
+        <Link to="/" className="back-link">
+          Go back home
+        </Link>
+      </section>
+    </main>
+  );
+}
 
 function PostLinkList({
   title,

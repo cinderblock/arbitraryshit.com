@@ -211,10 +211,13 @@ data ships prerendered, not as client JS. Order + status:
       Bun; inlined formatDate instead. Build verified: 5 valid PNGs, meta references
       correct.
 
-ALL SIX FEATURES DONE. Local commits on master (d9732d4, 61c3917, 3f84a32, fa91d15,
-5b3403e, + OG). Nothing pushed yet — awaiting Cameron's go to push (site repo is
-free to push, but this is a big batch worth his review first). CI-green under CI
-settings (19/19 chromium, serial+retries). Pre-existing firefox 404-flake noted above.
+ALL SIX FEATURES DONE + firefox 404 fixed + tests + README. FIREFOX FIX: the
+"unknown post 404" test failed on firefox because the loader's 404 surfaces as a
+plain Error (not a Response) in dev with ssr:false, so the ROOT ErrorBoundary showed
+"Something went wrong". Fixed by adding a POST-ROUTE ErrorBoundary (app/routes/post.tsx)
+that renders "Page Not Found" when the error is a 404 Response OR a non-Response error
+(the dev quirk), surfacing other statuses for real failures. Confirmed root cause via a
+console probe ("Route error: Error"). Now 87/87 green all browsers. Pushed live 2026-07-22.
 
 ## Open questions for the user
 
