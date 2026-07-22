@@ -22,6 +22,7 @@ export default {
     ];
     return [
       "/",
+      "/archive",
       ...posts.map((post) => `/posts/${post.slug}`),
       ...tagSlugs.map((slug) => `/tags/${slug}`),
     ];

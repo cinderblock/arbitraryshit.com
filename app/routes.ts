@@ -4,5 +4,6 @@ export default [
   index("routes/home.tsx"),
   route("posts/:slug", "routes/post.tsx"),
   route("tags/:tag", "routes/tag.tsx"),
+  route("archive", "routes/archive.tsx"),
   route("*", "routes/404.tsx"),
 ] satisfies RouteConfig;

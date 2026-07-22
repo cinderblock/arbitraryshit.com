@@ -77,9 +77,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 {"Cameron\u00A0Tacklind"}
               </a>
             </span>
-            <a href="https://github.com/cinderblock/arbitraryshit.com">
-              Source
-            </a>
+            <span className="site-footer-links">
+              <Link to="/archive">Archive</Link>
+              <a href="https://github.com/cinderblock/arbitraryshit.com">
+                Source
+              </a>
+            </span>
           </div>
         </footer>
         <ScrollRestoration />

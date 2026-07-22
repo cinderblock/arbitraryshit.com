@@ -466,11 +466,66 @@ a:focus-visible {
   color: var(--color-text-muted);
 }
 
+/* Archive page */
+
+.archive-year {
+  margin-top: 2rem;
+}
+
+.archive-year h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.archive-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.archive-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.archive-item a {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.archive-item a:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.archive-item time {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.archive-item .draft-badge {
+  margin-bottom: 0;
+}
+
 /* Site footer */
 
 .site-footer {
   margin-top: auto;
   border-top: 1px solid var(--color-border);
+}
+
+.site-footer-links {
+  display: flex;
+  gap: 1rem;
 }
 
 .site-footer-inner {

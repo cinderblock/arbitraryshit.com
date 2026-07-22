@@ -190,7 +190,8 @@ data ships prerendered, not as client JS. Order + status:
       NOTE: pre-existing firefox-only flake on the "unknown post 404" test (dev SPA
       fallback renders generic boundary instead of 404) — confirmed present on base
       commit 244050e, NOT caused by this work; CI retries:2 masks it.
-- [ ] **Archive page** — `/archive` route, prerendered, full grouped-by-year list.
+- [x] **Archive page** — `/archive` (routes/archive.tsx), prerendered, posts grouped
+      by year; "Archive" link added to the site footer. Draft-filtered. Build verified.
 - [ ] **Table of contents** — build-time ATX heading extraction in posts-fs (strip
       code fences first; slugs via `github-slugger` to match rehype-slug); renders
       only when a post has ≥2 h2/h3. Ships in loader data.
