@@ -24,9 +24,13 @@ export const meta: MetaFunction = () => {
     { property: "og:url", content: `${SITE_URL}/` },
     { property: "og:title", content: title },
     { property: "og:description", content: description },
-    { name: "twitter:card", content: "summary" },
+    { property: "og:image", content: `${SITE_URL}/og/default.png` },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: title },
     { name: "twitter:description", content: description },
+    { name: "twitter:image", content: `${SITE_URL}/og/default.png` },
   ];
 };
 

@@ -199,11 +199,22 @@ data ships prerendered, not as client JS. Order + status:
       listings — keeps those from growing with heading count). Build verified: TOC
       anchors byte-match rendered heading ids on post-template; absent on 0-heading
       posts.
-- [ ] **Auto OG images** — satori + @resvg/resvg-js at build time (NOT Playwright —
-      no browser dep, reliable in CF Pages). New `scripts/generate-og.ts` in
-      `bun run build` → `build/client/og/<slug>.png` (1200×630); post meta adds
-      og:image/twitter:image large card. Adds deps (satori, @resvg/resvg-js) + one
-      static Inter ttf. Heaviest; flag dep additions to Cameron.
+- [x] **Auto OG images** — Cameron chose satori + native @resvg/resvg-js (2026-07-22).
+      `scripts/generate-og.tsx` (JSX; `react-jsx`) renders a 1200×630 card per post +
+      a `default.png`, run last in `bun run build` → `build/client/og/<slug>.png`
+      (gitignored build artifact, regenerated each CF Pages build — not committed).
+      Font: Inter .woff from `@fontsource/inter` (satori needs ttf/otf/woff, NOT
+      woff2/variable). Deps are build-only → devDependencies (satori, @resvg/resvg-js,
+      @fontsource/inter). post + home meta add og:image (1200×630) and
+      twitter:card=summary_large_image. GOTCHA: can't import from app/lib/posts in the
+      Bun-run script — it runs `import.meta.glob` at load (Vite-only) → crashes plain
+      Bun; inlined formatDate instead. Build verified: 5 valid PNGs, meta references
+      correct.
+
+ALL SIX FEATURES DONE. Local commits on master (d9732d4, 61c3917, 3f84a32, fa91d15,
+5b3403e, + OG). Nothing pushed yet — awaiting Cameron's go to push (site repo is
+free to push, but this is a big batch worth his review first). CI-green under CI
+settings (19/19 chromium, serial+retries). Pre-existing firefox 404-flake noted above.
 
 ## Open questions for the user
 

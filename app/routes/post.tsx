@@ -13,7 +13,7 @@ import {
   getPostHeadings,
   getPostLinks,
 } from "../lib/posts.server";
-import { postUrl } from "../lib/site";
+import { postUrl, SITE_URL } from "../lib/site";
 import type { Route } from "./+types/post";
 
 const bodyCache = new Map<string, LazyExoticComponent<PostBody>>();
@@ -49,6 +49,7 @@ export const meta: Route.MetaFunction = ({ loaderData }) => {
   const { post } = loaderData;
   const title = `${post.title} — ArbitraryShit.com`;
   const url = postUrl(post.slug);
+  const image = `${SITE_URL}/og/${post.slug}.png`;
   return [
     { title },
     // Drafts are reachable but unlisted; keep them out of search indexes.
@@ -59,10 +60,14 @@ export const meta: Route.MetaFunction = ({ loaderData }) => {
     { property: "og:url", content: url },
     { property: "og:title", content: post.title },
     { property: "og:description", content: post.description },
+    { property: "og:image", content: image },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
     { property: "article:published_time", content: post.date },
-    { name: "twitter:card", content: "summary" },
+    { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: post.title },
     { name: "twitter:description", content: post.description },
+    { name: "twitter:image", content: image },
   ];
 };
 
