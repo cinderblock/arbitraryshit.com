@@ -42,6 +42,41 @@ async function countFromLink(path: string): Promise<number> {
   return ((await res.json()) as unknown[]).length;
 }
 
+/** Latest release, or the most recent tag, or null if the repo has neither. */
+async function fetchLatestVersion(
+  repo: string,
+): Promise<RepoStats["latestVersion"]> {
+  try {
+    const rel = await ghJson<{
+      tag_name: string;
+      html_url: string;
+      published_at: string | null;
+    }>(`/repos/${repo}/releases/latest`);
+    return {
+      tag: rel.tag_name,
+      url: rel.html_url,
+      publishedAt: rel.published_at,
+    };
+  } catch {
+    // No published release — fall back to the most recent tag, if any.
+  }
+  try {
+    const tags = await ghJson<Array<{ name: string }>>(
+      `/repos/${repo}/tags?per_page=1`,
+    );
+    if (tags.length > 0) {
+      return {
+        tag: tags[0].name,
+        url: `https://github.com/${repo}/releases/tag/${tags[0].name}`,
+        publishedAt: null,
+      };
+    }
+  } catch {
+    // No tags either.
+  }
+  return null;
+}
+
 async function fetchRepoStats(
   repo: string,
   pins: string[],
@@ -50,6 +85,7 @@ async function fetchRepoStats(
     stargazers_count: number;
     open_issues_count: number;
     default_branch: string;
+    pushed_at: string;
   }>(`/repos/${repo}`);
 
   const prSearch = await ghJson<{ total_count: number }>(
@@ -64,6 +100,8 @@ async function fetchRepoStats(
   const head = await ghJson<{ sha: string }>(
     `/repos/${repo}/commits/${encodeURIComponent(info.default_branch)}`,
   );
+
+  const latestVersion = await fetchLatestVersion(repo);
 
   const aheadBy: Record<string, number | null> = {};
   for (const pin of pins) {
@@ -87,6 +125,8 @@ async function fetchRepoStats(
     contributors,
     defaultBranch: info.default_branch,
     headSha: head.sha,
+    lastPushed: info.pushed_at,
+    latestVersion,
     aheadBy,
   };
 }

@@ -16,11 +16,7 @@ export function AiGenerated({
 }) {
   return (
     <aside className="ai-generated" aria-label={label}>
-      <span
-        className="ai-generated-mark"
-        aria-hidden="true"
-        title="Written by AI, not the author"
-      >
+      <span className="ai-generated-mark" aria-hidden="true">
         AI
       </span>
       <div className="ai-generated-body">{children}</div>

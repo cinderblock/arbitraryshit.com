@@ -105,7 +105,17 @@ test.describe("Post Page", () => {
       card.getByRole("link", { name: "cinderblock/arbitraryshit.com" }),
     ).toBeVisible();
     await expect(card.locator(".repo-card-stats")).toContainText("contributor");
+    // Last-activity detail (from the daily-refreshed snapshot).
+    await expect(card.locator(".repo-card-stats")).toContainText("updated");
     await expect(card.locator(".repo-card-pin")).toContainText("Written at ");
+  });
+
+  test("shows the latest release/tag when the repo has one", async ({
+    page,
+  }) => {
+    // Jarlid ships tagged releases; the card surfaces the latest version.
+    await page.goto("/posts/jarlid");
+    await expect(page.locator(".repo-card-version")).toHaveText(/^v?\d/);
   });
 
   test("links posts directionally via builds-on (dev)", async ({ page }) => {

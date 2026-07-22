@@ -7,9 +7,21 @@ export interface RepoCardData {
     openPRs: number;
     contributors: number;
     defaultBranch: string;
+    /** ISO timestamp of the most recent push. */
+    lastPushed: string;
+    /** Latest release or tag, or null if neither. */
+    latestVersion?: { tag: string; url: string } | null;
     /** Commits the repo is ahead of this post's pinned commit. */
     aheadBy?: number | null;
   };
+}
+
+function shortDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }
 
 function GitHubMark() {
@@ -29,10 +41,15 @@ export function RepoCard({ github }: { github: RepoCardData }) {
   const { repo, commit, stats } = github;
   const base = `https://github.com/${repo}`;
   return (
-    <aside className="repo-card" title="Stats refresh daily">
+    <aside className="repo-card">
       <div className="repo-card-title">
         <GitHubMark />
         <a href={base}>{repo}</a>
+        {stats?.latestVersion && (
+          <a className="repo-card-version" href={stats.latestVersion.url}>
+            {stats.latestVersion.tag}
+          </a>
+        )}
       </div>
       {stats && (
         <ul className="repo-card-stats">
@@ -54,6 +71,11 @@ export function RepoCard({ github }: { github: RepoCardData }) {
           <li>
             <a href={`${base}/graphs/contributors`}>
               {stats.contributors} contributor{s(stats.contributors)}
+            </a>
+          </li>
+          <li>
+            <a href={`${base}/commits/${stats.defaultBranch}`}>
+              updated {shortDate(stats.lastPushed)}
             </a>
           </li>
         </ul>

@@ -14,6 +14,17 @@ export interface RepoStats {
   contributors: number;
   defaultBranch: string;
   headSha: string;
+  /** ISO timestamp of the most recent push (activity recency). */
+  lastPushed: string;
+  /**
+   * Latest release (preferred) or most recent tag, or null if the repo has
+   * neither. `publishedAt` is null for a bare tag with no release.
+   */
+  latestVersion: {
+    tag: string;
+    url: string;
+    publishedAt: string | null;
+  } | null;
   /**
    * Commits the default branch is ahead of each pinned sha referenced by a
    * post. null = the pin could not be compared (e.g. force-pushed away).

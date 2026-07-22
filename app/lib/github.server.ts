@@ -18,6 +18,8 @@ export function getRepoCard(post: PostMeta): RepoCardData | undefined {
       openPRs: stats.openPRs,
       contributors: stats.contributors,
       defaultBranch: stats.defaultBranch,
+      lastPushed: stats.lastPushed,
+      latestVersion: stats.latestVersion ?? null,
       aheadBy: commit !== undefined ? stats.aheadBy[commit] : undefined,
     },
   };

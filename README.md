@@ -54,8 +54,9 @@ Words. Markdown. Code blocks get highlighted automatically.
   as prerendered HTML with a canonical tag; headings get anchor ids, so
   `/posts/my-cool-thing#some-section` deep-links work too.
 - **Repo card**: add `github: owner/repo` to show a standardized GitHub card
-  under the title (stars, open issues, open PRs, contributors). Pin the
-  commit you wrote against to also get a "N commits since" drift line:
+  under the title — latest release/tag, stars, open issues, open PRs,
+  contributors, and last-activity date. Pin the commit you wrote against to
+  also get a "N commits since" drift line:
 
   ```yaml
   github:
@@ -93,13 +94,14 @@ downloads more because there are more posts:
 
 ## GitHub stats
 
-`data/github-stats.json` is a committed snapshot of stars / issues / PRs /
-contributors and "commits ahead of each post's pinned sha" for every repo a
-post references. `.github/workflows/refresh-github-stats.yml` refreshes it
-daily (and on demand via workflow_dispatch), committing only when the
-numbers changed — that commit triggers the Cloudflare Pages rebuild that
-bakes fresh numbers into the static pages. Run `bun run refresh:github`
-locally after adding a repo to a post.
+`data/github-stats.json` is a committed snapshot of each referenced repo's
+latest release/tag, stars, issues, PRs, contributors, last-push date, and
+"commits ahead of each post's pinned sha". `.github/workflows/refresh-github-stats.yml`
+refreshes it daily (and on demand via workflow_dispatch), committing only
+when something changed — that commit triggers the Cloudflare Pages rebuild
+that bakes fresh numbers into the static pages. So the cards stay current
+without any push to the blog. Run `bun run refresh:github` locally after
+adding a repo to a post.
 
 ## Scripts
 

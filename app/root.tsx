@@ -49,7 +49,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <Link to="/" className="site-name">
               ArbitraryShit<span className="site-tld">.com</span>
             </Link>
-            <a href="/feed.xml" className="rss-link" title="RSS feed">
+            <a href="/feed.xml" className="rss-link" aria-label="RSS feed">
               RSS
             </a>
           </div>
