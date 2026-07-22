@@ -34,6 +34,9 @@ app/posts/my-cool-thing/
 title: "My Cool Thing"
 date: "2026-07-11"
 description: "One-liner shown on the home page and in the RSS feed."
+tags:
+  - hardware
+  - web
 ---
 
 Words. Markdown. Code blocks get highlighted automatically.
@@ -69,10 +72,24 @@ Words. Markdown. Code blocks get highlighted automatically.
   "Built on by …" backlink on the other post. `related: [other-slug]` for
   non-directional links, also symmetric. Inline markdown links to
   `/posts/<slug>` work anywhere in the body. Typo'd slugs fail the build.
+- **Tags**: add `tags: [...]` to show topic chips on the home list and post
+  header, each linking to a prerendered `/tags/<tag>` index of matching posts.
 
 `app/posts/post-template/` is a permanent draft you can copy to start a post.
 
 Commit, push to `master`, and Cloudflare Pages builds and deploys it.
+
+You get these automatically, no frontmatter needed:
+
+- **Reading time** — an estimate ("N min read") beside each post's date, from
+  a build-time word count of the prose.
+- **Table of contents** — a "Contents" box on any post with two or more
+  headings; its anchors match the headings' ids.
+- **Prev/next navigation** — older/newer neighbor cards at the foot of a post.
+- **Archive** — `/archive` lists every post grouped by year (linked in the
+  footer).
+- **Social cards** — a 1200×630 Open Graph image is generated per post (and a
+  site default) at build time and referenced from each page's `og:image`.
 
 ## How posts are wired
 
@@ -108,7 +125,7 @@ adding a repo to a post.
 | Script              | Description                  |
 | ------------------- | ---------------------------- |
 | `bun run dev`       | Start dev server             |
-| `bun run build`     | Build static site + RSS feed |
+| `bun run build`     | Build static site + RSS + OG |
 | `bun run preview`   | Preview built site           |
 | `bun run test`      | Run Playwright tests         |
 | `bun run test:ui`   | Run tests with Playwright UI |
