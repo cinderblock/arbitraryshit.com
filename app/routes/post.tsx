@@ -68,6 +68,25 @@ export const meta: Route.MetaFunction = ({ loaderData }) => {
     { name: "twitter:title", content: post.title },
     { name: "twitter:description", content: post.description },
     { name: "twitter:image", content: image },
+    {
+      "script:ld+json": {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: post.title,
+        description: post.description,
+        datePublished: post.date,
+        image,
+        url,
+        mainEntityOfPage: url,
+        wordCount: post.words,
+        keywords: post.tags.join(", "),
+        author: {
+          "@type": "Person",
+          name: "Cameron Tacklind",
+          url: "https://cameron.tacklind.com",
+        },
+      },
+    },
   ];
 };
 

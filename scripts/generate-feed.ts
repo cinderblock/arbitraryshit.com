@@ -1,5 +1,6 @@
-// Generates build/client/feed.xml from post frontmatter.
-// Runs as part of `bun run build`, after react-router build.
+// Generates build/client/feed.xml (RSS 2.0) and feed.json (JSON Feed 1.1)
+// from post frontmatter. Runs as part of `bun run build`, after react-router
+// build.
 import { existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { postUrl, SITE_URL } from "../app/lib/site";
@@ -58,4 +59,30 @@ ${items}
 `;
 
 writeFileSync(join(OUT_DIR, "feed.xml"), feed);
-console.log(`feed.xml written with ${posts.length} post(s)`);
+
+// JSON Feed 1.1 — same items, for readers that prefer JSON.
+const jsonFeed = {
+  version: "https://jsonfeed.org/version/1.1",
+  title: "ArbitraryShit.com",
+  home_page_url: SITE_URL,
+  feed_url: `${SITE_URL}/feed.json`,
+  description: "Random little projects, arbitrarily documented.",
+  language: "en-US",
+  authors: [{ name: "Cameron Tacklind", url: "https://cameron.tacklind.com" }],
+  items: posts.slice(0, FEED_LIMIT).map((post) => ({
+    id: postUrl(post.slug),
+    url: postUrl(post.slug),
+    title: post.title,
+    summary: post.description,
+    content_text: post.description,
+    date_published: `${post.date}T12:00:00Z`,
+    image: `${SITE_URL}/og/${post.slug}.png`,
+    tags: post.tags,
+  })),
+};
+writeFileSync(
+  join(OUT_DIR, "feed.json"),
+  `${JSON.stringify(jsonFeed, null, 2)}\n`,
+);
+
+console.log(`feed.xml + feed.json written with ${posts.length} post(s)`);

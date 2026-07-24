@@ -42,6 +42,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
           title="ArbitraryShit.com"
           href="/feed.xml"
         />
+        <link
+          rel="alternate"
+          type="application/feed+json"
+          title="ArbitraryShit.com"
+          href="/feed.json"
+        />
         <Meta />
         <Links />
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />

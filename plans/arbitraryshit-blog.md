@@ -108,35 +108,24 @@ recommendation, not a promise. **Invariant to respect on all of these:** every
 page view stays O(1) regardless of post count — do the work at build time, keep
 client indexes metadata-only and lazy.
 
-Discovery/nav (highest value as post count grows):
+Cameron triaged the remainder 2026-07-24 (tags/archive/prev-next/reading-time/TOC/OG
+shipped 2026-07-22, see "Feature implementation" below):
 
-- **Tags/topics** — frontmatter `tags: [...]`, prerendered `/tags/<tag>` index
-  routes (same loader pattern as home; tag→posts map is build-time only). Biggest
-  gap once past ~15 posts.
-- **Client-side search** — build-time `search-index.json` over **metadata only**
-  (title/description/tags, NOT bodies), fetched lazily on first keystroke. Full-text
-  would break the invariant — don't.
-- **Archive / all-posts page** — already flagged as a future lever above; cheap,
-  prerendered.
-- **Prev/next post nav** — build-time from the sorted list, ships in the post's `.data`.
-
-Content richness:
-
-- **Reading time + word count** — build-time from MDX, zero client cost.
-- **Table of contents** — already have `rehype-slug`; add `rehype-autolink-headings`
-  - build-time TOC from the heading tree; optional sticky sidebar in wide themes.
-- **Series/multi-part posts** — generalize `builds-on` into a `series:` key ("Part 2
-  of N" + sibling nav).
-- **Auto OG images** — per-post social cards (title+date → PNG at build time via the
-  Playwright we already have). High effort:reward for a shared/public blog; fully static.
-- **Callouts/admonitions** — note/warning/tip MDX components, same quiet styling as
-  `<AiGenerated>`.
-
-Meta/polish:
-
-- **sitemap.xml + `Article` JSON-LD**, **JSON Feed** alongside RSS (trivial given
-  generate-feed.ts), **view-transition** route animations (RR 8 supports it),
-  privacy-respecting **analytics** (CF Web Analytics, no cookie banner).
+- **TODO WHEN NEEDED — Client-side search**: build when the archive feels long
+  (~15+ posts). Build-time `search-index.json` over **metadata only**
+  (title/description/tags, NOT bodies), fetched lazily on first keystroke.
+  Full-text would break the invariant — don't.
+- **TODO WHEN NEEDED — Series/multi-part posts**: build when a multi-part post
+  actually exists. `series:` frontmatter key → "Part 2 of N" + sibling nav
+  (generalizes `builds-on`).
+- **Callouts/admonitions** — explained to Cameron 2026-07-24 (Note/Warning/Tip aside
+  boxes as no-import MDX components, quiet styling like `<AiGenerated>`); awaiting
+  his yes/no. No current post needs one.
+- **APPROVED 2026-07-24, in progress:** (a) **sitemap.xml + Article JSON-LD + JSON
+  Feed**; (b) **subtle animations site-wide** ("more good subtle animations all over"
+  — view transitions + CSS micro-interactions, always `prefers-reduced-motion`-guarded,
+  must not fight the 11 themes); (c) **analytics** (CF Web Analytics beacon — the
+  CF-side token/site creation is infrastructure → ops repo + per-change consent).
 
 Comments — **REOPENED 2026-07-22.** Cameron: no forced GitHub account (rules out giscus),
 but he IS open to a database. So the live plan is a **self-hosted CF stack** he fully

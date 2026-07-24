@@ -31,6 +31,20 @@ export const meta: MetaFunction = () => {
     { name: "twitter:title", content: title },
     { name: "twitter:description", content: description },
     { name: "twitter:image", content: `${SITE_URL}/og/default.png` },
+    {
+      "script:ld+json": {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        name: title,
+        description,
+        url: `${SITE_URL}/`,
+        author: {
+          "@type": "Person",
+          name: "Cameron Tacklind",
+          url: "https://cameron.tacklind.com",
+        },
+      },
+    },
   ];
 };
 
