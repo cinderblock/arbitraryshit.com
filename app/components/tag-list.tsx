@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from "./link";
 import { tagSlug } from "../lib/tags";
 
 // Renders a post's tags as chips linking to their tag index pages. Shown on

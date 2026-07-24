@@ -1,5 +1,5 @@
 import type { MetaFunction } from "react-router";
-import { Link } from "react-router";
+import { Link } from "../components/link";
 import { formatDate } from "../lib/posts";
 import { listPosts } from "../lib/posts.server";
 import { SITE_URL } from "../lib/site";

@@ -1,6 +1,5 @@
 import {
   isRouteErrorResponse,
-  Link,
   Links,
   Meta,
   Outlet,
@@ -8,6 +7,7 @@ import {
   ScrollRestoration,
   useRouteError,
 } from "react-router";
+import { Link } from "./components/link";
 import "@fontsource-variable/inter/index.css";
 import "./styles/global.css";
 // Importing the theme registry also bundles every theme's CSS (eager glob).

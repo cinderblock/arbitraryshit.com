@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from "../components/link";
 import { TagList } from "../components/tag-list";
 import { formatDate } from "../lib/posts";
 import { listPosts } from "../lib/posts.server";

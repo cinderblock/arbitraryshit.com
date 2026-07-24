@@ -80,6 +80,68 @@ html {
   background-color: var(--color-background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+/*
+ * Motion. Subtle, fast, transform/opacity/color only — nothing that fights
+ * the themes (they restyle colors and surfaces; these animate geometry).
+ * Everything here is neutralized by the reduced-motion guard at the bottom
+ * of this section.
+ */
+
+/* One gentle rise on first paint. On <body> so it runs once per document
+ * load, not again on every client-side navigation (those get the view
+ * transition instead). */
+body {
+  animation: page-enter 360ms ease-out;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* Client-side navigations: quick fade out, new page fades in with a small
+ * rise. No-op in browsers without the View Transitions API. */
+::view-transition-old(root) {
+  animation: 90ms ease-in both vt-out;
+}
+
+::view-transition-new(root) {
+  animation: 210ms ease-out both vt-in;
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* The single motion switch: users who ask for reduced motion get none of
+ * it — including theme animations and smooth scrolling. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after,
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 body {
@@ -92,6 +154,10 @@ body {
 a {
   text-decoration: none;
   color: var(--color-primary);
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease;
 }
 
 a:hover {
@@ -245,12 +311,17 @@ a:focus-visible {
   border: 1px solid var(--color-border);
   border-radius: 999px;
   padding: 0.3rem 0.6rem;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
 }
 
 .tag-chip:hover {
   text-decoration: none;
   color: var(--color-primary);
   border-color: var(--color-primary);
+  transform: translateY(-1px);
 }
 
 .post-header-tags {
@@ -403,11 +474,15 @@ a:focus-visible {
   border-radius: 8px;
   background: var(--color-surface);
   color: var(--color-text);
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease;
 }
 
 .post-nav-link:hover {
   text-decoration: none;
   border-color: var(--color-primary);
+  transform: translateY(-2px);
 }
 
 .post-nav-newer {
@@ -534,13 +609,18 @@ a:focus-visible {
 }
 
 .archive-item a {
+  display: inline-block;
   color: var(--color-text);
   font-weight: 500;
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
 }
 
 .archive-item a:hover {
   color: var(--color-primary);
   text-decoration: none;
+  transform: translateX(3px);
 }
 
 .archive-item time {
@@ -721,6 +801,11 @@ code {
   border-radius: 6px;
   padding: 0.25rem 0.5rem;
   cursor: pointer;
+  transition: border-color 160ms ease;
+}
+
+.theme-switcher select:hover {
+  border-color: var(--color-primary);
 }
 
 .theme-switcher select:focus-visible {
@@ -773,7 +858,14 @@ code {
   gap: 0.5rem;
   color: var(--color-primary);
   font-weight: 500;
-  transition: color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    gap 0.2s ease;
+}
+
+/* Nudge the arrow away from the label on hover. */
+.back-link:hover {
+  gap: 0.7rem;
 }
 
 .back-link:hover {

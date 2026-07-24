@@ -1,6 +1,7 @@
 import type { LazyExoticComponent } from "react";
 import { lazy, Suspense } from "react";
-import { isRouteErrorResponse, Link, useRouteError } from "react-router";
+import { isRouteErrorResponse, useRouteError } from "react-router";
+import { Link } from "../components/link";
 import { mdxComponents } from "../components/mdx-components";
 import { RepoCard } from "../components/repo-card";
 import { TableOfContents } from "../components/table-of-contents";
