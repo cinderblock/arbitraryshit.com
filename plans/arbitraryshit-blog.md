@@ -121,11 +121,23 @@ shipped 2026-07-22, see "Feature implementation" below):
 - **Callouts/admonitions** — explained to Cameron 2026-07-24 (Note/Warning/Tip aside
   boxes as no-import MDX components, quiet styling like `<AiGenerated>`); awaiting
   his yes/no. No current post needs one.
-- **APPROVED 2026-07-24, in progress:** (a) **sitemap.xml + Article JSON-LD + JSON
-  Feed**; (b) **subtle animations site-wide** ("more good subtle animations all over"
-  — view transitions + CSS micro-interactions, always `prefers-reduced-motion`-guarded,
-  must not fight the 11 themes); (c) **analytics** (CF Web Analytics beacon — the
-  CF-side token/site creation is infrastructure → ops repo + per-change consent).
+- **SHIPPED 2026-07-24** (approved same day): (a) **SEO/feeds** (a0c77c5) —
+  `scripts/generate-sitemap.ts` (sitemap.xml: home/archive/posts/tags, drafts absent,
+  lastmod from post dates), `public/robots.txt`, feed.json (JSON Feed 1.1, same items
+  as RSS, rel=alternate link), BlogPosting JSON-LD on posts + Blog JSON-LD on home via
+  RR's `"script:ld+json"` meta descriptor (verified in prerendered HTML). (b)
+  **Site-wide motion** (ffb266e) — app-wide `Link` wrapper (app/components/link.tsx,
+  `viewTransition` default; import THIS Link in app code, not react-router's) → fade
+  out/rise-in on SPA navs; one-time body page-enter rise (on body so it doesn't replay
+  per-nav); hover lifts (chips, post-nav cards), archive-row nudge, back-link gap
+  nudge, eased colors/borders, smooth anchor scroll; ONE `prefers-reduced-motion`
+  guard kills everything incl. theme animations. All transform/opacity/color — theme-safe.
+- **Analytics — STAGED in ops, awaiting Cameron's consent 2026-07-24.** Ops repo has
+  first-class `web_analytics` support (expand/handlers/web-analytics.ts;
+  `true` → zone RUM site, auto_install → CF injects the beacon at the edge, ZERO blog
+  code). Staged one line + comment in `cloudflare/config/isozilla/arbitraryshit.yaml`:
+  `web_analytics: true`. Uncommitted in the ops working tree — do not commit/push
+  without his explicit yes.
 
 Comments — **REOPENED 2026-07-22.** Cameron: no forced GitHub account (rules out giscus),
 but he IS open to a database. So the live plan is a **self-hosted CF stack** he fully
