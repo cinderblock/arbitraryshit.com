@@ -132,12 +132,11 @@ shipped 2026-07-22, see "Feature implementation" below):
   per-nav); hover lifts (chips, post-nav cards), archive-row nudge, back-link gap
   nudge, eased colors/borders, smooth anchor scroll; ONE `prefers-reduced-motion`
   guard kills everything incl. theme animations. All transform/opacity/color — theme-safe.
-- **Analytics — STAGED in ops, awaiting Cameron's consent 2026-07-24.** Ops repo has
-  first-class `web_analytics` support (expand/handlers/web-analytics.ts;
-  `true` → zone RUM site, auto_install → CF injects the beacon at the edge, ZERO blog
-  code). Staged one line + comment in `cloudflare/config/isozilla/arbitraryshit.yaml`:
-  `web_analytics: true`. Uncommitted in the ops working tree — do not commit/push
-  without his explicit yes.
+- **Analytics — LIVE 2026-07-24.** Cameron consented ("yes"); `web_analytics: true`
+  in `cloudflare/config/isozilla/arbitraryshit.yaml` pushed as ops@bd94431; sync CI
+  green (sync-infra + sync-verify). Beacon verified injected at the edge on the live
+  HTML (static.cloudflareinsights.com, token fb9c4e6f…). Zero blog-repo code — CF
+  auto-injects. Dashboard: CF → Analytics → Web Analytics.
 
 Comments — **REOPENED 2026-07-22.** Cameron: no forced GitHub account (rules out giscus),
 but he IS open to a database. So the live plan is a **self-hosted CF stack** he fully
