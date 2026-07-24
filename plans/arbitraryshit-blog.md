@@ -221,7 +221,14 @@ console probe ("Route error: Error"). Now 87/87 green all browsers. Pushed live 
 
 ## Open questions for the user
 
-1. Ops consent: OK to commit+push the staged `arbitraryshit.yaml` change? It adds the Pages project (git-connected build of cinderblock/arbitraryshit.com) and **replaces the apex CNAME to `cinderblock.hyper.media`** ("I fixed the internet", ttl 60) with the Pages apex CNAME. The old record is left commented in the file. If hyper.media should survive, it needs a subdomain instead.
+1. RESOLVED 2026-07-05 (was stale in this list until 2026-07-24). The ops
+   `arbitraryshit.yaml` change (add `pages:` block + comment out the old
+   `cinderblock.hyper.media` apex cname in favor of the Pages apex CNAME) was
+   consented ("Yes, push it") and pushed as ops@956df57; site live since
+   2026-07-05. Nothing pending. Only lingering (optional) thread: the old
+   `cinderblock.hyper.media` "I fixed the internet" record was dropped, not
+   relocated — if Cameron wants it back, it needs a subdomain (a small,
+   separate, consent-gated ops change). He has not asked for this.
 
 ## Things not to do
 
