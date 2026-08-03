@@ -1,38 +1,38 @@
 {
   "cinderblock/arbitraryshit.com": {
-    "fetchedAt": "2026-08-02",
+    "fetchedAt": "2026-08-03",
     "stars": 0,
     "openIssues": 0,
     "openPRs": 0,
     "contributors": 2,
     "defaultBranch": "master",
-    "headSha": "d2b217310e6806e947fe0a6146dc35ca81d17a4d",
-    "lastPushed": "2026-08-01T10:48:32Z",
+    "headSha": "fbf1d176d6549464cd17d02a1d02be5970e35d38",
+    "lastPushed": "2026-08-02T10:50:30Z",
     "latestVersion": null,
     "aheadBy": {
-      "58d917679392c9bf226407e19e41ca73bc5d0b49": 59
+      "58d917679392c9bf226407e19e41ca73bc5d0b49": 60
     }
   },
   "cinderblock/jarlid": {
-    "fetchedAt": "2026-08-02",
+    "fetchedAt": "2026-08-03",
     "stars": 0,
     "openIssues": 0,
     "openPRs": 0,
     "contributors": 1,
     "defaultBranch": "main",
-    "headSha": "e96a4d239d84517f985cc1a915b5f053c3be8796",
-    "lastPushed": "2026-07-30T22:53:10Z",
+    "headSha": "a26f85ca430b400bb34cea5e3354c1f621437228",
+    "lastPushed": "2026-08-03T05:27:02Z",
     "latestVersion": {
       "tag": "v0.6.8",
       "url": "https://github.com/cinderblock/jarlid/releases/tag/v0.6.8",
       "publishedAt": "2026-07-30T22:59:58Z"
     },
     "aheadBy": {
-      "178a202c60bd8c809be0c0032aba61bf377c2d61": 32
+      "178a202c60bd8c809be0c0032aba61bf377c2d61": 36
     }
   },
   "cinderblock/plugsight": {
-    "fetchedAt": "2026-08-02",
+    "fetchedAt": "2026-08-03",
     "stars": 0,
     "openIssues": 0,
     "openPRs": 0,
