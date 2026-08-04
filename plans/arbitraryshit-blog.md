@@ -284,7 +284,20 @@ now `cinderblock/arbitraryshit.com` + `cinderblock/svdsa.org`).
 Granting access does **not** retroactively build — a new push is required,
 which is what the commit carrying this note is for.
 
-**Re-granting access was NOT sufficient (verified 2026-08-04).** With
+**Resolution 2026-08-04:** the intermediate "re-granting didn't help"
+readings below were explained by the settings page never having been
+**saved** — the screenshot showed a pending selection. Once Cameron saved
+`cinderblock/arbitraryshit.com` + `cinderblock/list.awesomeled.xyz` +
+`cinderblock/svdsa.org`, deploys resumed. No stale-installation repair was
+needed. **Lesson: this failure mode is completely silent** — no error, no
+failed build, no notification; deploys simply stop and the site serves stale
+content indefinitely. When a Pages site looks "not updating", check
+`GET /accounts/{acct}/pages/projects/{project}/deployments` for the last
+attempt before assuming a build problem, and test page _content_ (CF's SPA
+fallback returns 200 + text/html for missing files, so status codes lie).
+
+Superseded intermediate finding, kept for the reasoning trail —
+**re-granting access appeared insufficient.** With
 `arbitraryshit.com` back in the selected list, a real test push (`65c7a63`)
 produced: no Cloudflare check-suite on the commit, and no new deployment
 (CF still shows 07-27). Additional checks ruled out the obvious suspects —
