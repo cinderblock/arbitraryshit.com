@@ -1,0 +1,24 @@
+# Line endings, made explicit so they don't depend on each machine's
+# core.autocrlf: text files are stored LF in the repository (they already
+# are) and checked out with the platform's native endings — CRLF on Windows.
+#
+# Declaring this also stops Windows working trees from reporting every file
+# as modified-with-an-empty-diff when a tool rewrites files wholesale (e.g.
+# a repo-wide `bun run fmt`), which is what prompted adding this file.
+* text=auto
+
+# Tool-managed files that are always written LF; keep them LF on disk too so
+# the tools don't fight the checkout.
+bun.lock text eol=lf
+*.sh text eol=lf
+
+# Binary assets — never transform.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
