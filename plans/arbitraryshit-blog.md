@@ -275,10 +275,32 @@ its access to this repo. It broke between 07-27 12:36 and the next push
 _after_ the first missed push, so it isn't the cause. 12 pushes have been
 silently skipped since.
 
-Fix (Cameron's to make — his GitHub account):
-<https://github.com/settings/installations> → **Cloudflare Workers and Pages**
-→ ensure repository access includes `arbitraryshit.com`. Re-granting should
-resume automatic deploys.
+**CAUSE CONFIRMED 2026-08-04 (Cameron):** he switched the "Cloudflare Workers
+and Pages" GitHub App from _All repositories_ to _Only select repositories_
+and didn't re-add everything. `arbitraryshit.com` was left out, so GitHub
+stopped sending it push events. He has since re-added it (selected list is
+now `cinderblock/arbitraryshit.com` + `cinderblock/svdsa.org`).
+
+Granting access does **not** retroactively build — a new push is required,
+which is what the commit carrying this note is for.
+
+Blast radius across the account's other Pages projects (checked via API):
+
+| project                                                      | git source                      | effect                                                                                            |
+| ------------------------------------------------------------ | ------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `arbitraryshit-com`                                          | cinderblock/arbitraryshit.com   | broke 07-27, 13 pushes skipped; re-granted                                                        |
+| `list-awesomeled-xyz`                                        | cinderblock/list.awesomeled.xyz | **still blocked** — nothing lost yet (no push since 07-17) but its next push won't deploy         |
+| `tomsawyerlabs-com`                                          | TomSawyerLabs/tomsawyerlabs.com | fine — org-owned, separate App installation, CF check still passing                               |
+| `cameron-tacklind-com`, `blake-tacklind-com`, `tacklind-com` | none                            | unaffected: no git connection, deployed by wrangler direct-upload from Actions using an API token |
+
+Workers (`uptime`, `ask`, `ddns`, `shs-sports`) are deployed by wrangler from
+ops CI, so the App doesn't gate them either. Caveat: this only covers the
+Cloudflare account whose token is in `ops/cloudflare/.env.local`; projects in
+the separate "dedicated account" (svdsa) aren't visible from here.
+
+Recommendation: add `cinderblock/list.awesomeled.xyz` to the selected list —
+or switch back to _All repositories_, which also covers future repos and
+avoids repeating this silent-failure mode.
 
 Stopgap (needs per-change authorization; not done): `POST
 /accounts/{account}/pages/projects/arbitraryshit-com/deployments` with
