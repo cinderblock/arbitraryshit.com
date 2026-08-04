@@ -24,19 +24,38 @@ export const meta: Route.MetaFunction = ({ loaderData }) => {
   if (!loaderData) return [{ title: "Tag Not Found — ArbitraryShit.com" }];
   const { name } = loaderData;
   const title = `Posts tagged "${name}" — ArbitraryShit.com`;
+  const base = `${SITE_URL}/tags/${tagSlug(name)}`;
   return [
     { title },
+    { tagName: "link", rel: "canonical", href: base },
+    { name: "description", content: `All posts tagged "${name}".` },
+    // Tag-scoped feeds, alongside the site-wide ones in root.tsx.
     {
       tagName: "link",
-      rel: "canonical",
-      href: `${SITE_URL}/tags/${tagSlug(name)}`,
+      rel: "alternate",
+      type: "application/rss+xml",
+      title: `ArbitraryShit.com — ${name}`,
+      href: `${base}/feed.xml`,
     },
-    { name: "description", content: `All posts tagged "${name}".` },
+    {
+      tagName: "link",
+      rel: "alternate",
+      type: "application/atom+xml",
+      title: `ArbitraryShit.com — ${name}`,
+      href: `${base}/atom.xml`,
+    },
+    {
+      tagName: "link",
+      rel: "alternate",
+      type: "application/feed+json",
+      title: `ArbitraryShit.com — ${name}`,
+      href: `${base}/feed.json`,
+    },
   ];
 };
 
 export default function Tag({ loaderData }: Route.ComponentProps) {
-  const { name, posts } = loaderData;
+  const { name, slug, posts } = loaderData;
   return (
     <main className="container">
       <section className="intro-block">
@@ -44,6 +63,12 @@ export default function Tag({ loaderData }: Route.ComponentProps) {
         <h1>{name}</h1>
         <p className="subtitle">
           {posts.length} {posts.length === 1 ? "post" : "posts"}
+          <span className="dot-sep" aria-hidden="true">
+            ·
+          </span>
+          <a href={`/tags/${slug}/feed.xml`} className="tag-feed-link">
+            RSS
+          </a>
         </p>
       </section>
       <section aria-label={`Posts tagged ${name}`}>

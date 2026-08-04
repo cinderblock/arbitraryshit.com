@@ -93,3 +93,42 @@ test.describe("Table of contents", () => {
     await expect(page.locator(".post-toc")).toHaveCount(0);
   });
 });
+
+test.describe("Feeds", () => {
+  test("advertises site-wide RSS, Atom, and JSON feeds", async ({ page }) => {
+    await page.goto("/");
+    const head = page.locator('head link[rel="alternate"]');
+    await expect(
+      head.and(page.locator('[type="application/rss+xml"]')),
+    ).toHaveAttribute("href", "/feed.xml");
+    await expect(
+      head.and(page.locator('[type="application/atom+xml"]')),
+    ).toHaveAttribute("href", "/atom.xml");
+    await expect(
+      head.and(page.locator('[type="application/feed+json"]')),
+    ).toHaveAttribute("href", "/feed.json");
+  });
+
+  test("a tag page advertises its own tag-scoped feeds", async ({ page }) => {
+    await page.goto("/tags/meta");
+    for (const [type, file] of [
+      ["application/rss+xml", "feed.xml"],
+      ["application/atom+xml", "atom.xml"],
+      ["application/feed+json", "feed.json"],
+    ]) {
+      await expect(
+        page.locator(
+          `head link[rel="alternate"][type="${type}"][href$="/tags/meta/${file}"]`,
+        ),
+      ).toHaveCount(1);
+    }
+  });
+
+  test("a tag page links its feed visibly", async ({ page }) => {
+    await page.goto("/tags/meta");
+    await expect(page.locator(".tag-feed-link")).toHaveAttribute(
+      "href",
+      "/tags/meta/feed.xml",
+    );
+  });
+});

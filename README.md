@@ -98,9 +98,9 @@ downloads more because there are more posts:
 
 - `scripts/posts-fs.ts` — single source of truth: enumerates
   `app/posts/*/index.mdx` and parses frontmatter via `node:fs`. Used by the
-  prerender list in `react-router.config.ts`, the RSS generator
-  (`scripts/generate-feed.ts`, emits `build/client/feed.xml`, capped to the
-  20 newest), and route loaders (via `app/lib/posts.server.ts`).
+  prerender list in `react-router.config.ts`, the feed generator
+  (`scripts/generate-feed.ts`), and route loaders (via
+  `app/lib/posts.server.ts`).
 - Route loaders run at **build time** (`ssr: false` + prerender), so post
   metadata ships as per-route `.data` files and prerendered HTML — never as
   JavaScript. The home route's loader carries the full list; each post
@@ -108,6 +108,25 @@ downloads more because there are more posts:
 - `app/lib/posts.ts` — client side: post bodies are only ever imported
   dynamically (`import.meta.glob`), so each post plus its interactive
   components is its own chunk, fetched only when that post is viewed.
+
+## Feeds
+
+Generated at build time by `scripts/generate-feed.ts`, capped to the 20
+newest published posts (drafts excluded). Three formats, site-wide and again
+scoped to every tag:
+
+| Scope | RSS 2.0              | Atom 1.0             | JSON Feed 1.1         |
+| ----- | -------------------- | -------------------- | --------------------- |
+| Site  | `/feed.xml`          | `/atom.xml`          | `/feed.json`          |
+| Tag   | `/tags/<t>/feed.xml` | `/tags/<t>/atom.xml` | `/tags/<t>/feed.json` |
+
+Items carry their tags as categories. Every page advertises the site feeds
+for reader autodiscovery; tag pages additionally advertise their own three
+and show a visible RSS link.
+
+`scripts/verify-feeds.ts` runs last in the build and fails it if a feed is
+malformed, advertises a URL that wasn't generated, or a tag page is missing
+its feed links.
 
 ## GitHub stats
 
@@ -125,7 +144,7 @@ adding a repo to a post.
 | Script              | Description                  |
 | ------------------- | ---------------------------- |
 | `bun run dev`       | Start dev server             |
-| `bun run build`     | Build static site + RSS + OG |
+| `bun run build`     | Build site + feeds + OG      |
 | `bun run preview`   | Preview built site           |
 | `bun run test`      | Run Playwright tests         |
 | `bun run test:ui`   | Run tests with Playwright UI |

@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "react-router dev",
-    "build": "react-router build && bun scripts/generate-feed.ts && bun scripts/generate-sitemap.ts && bun scripts/generate-og.tsx",
+    "build": "react-router build && bun scripts/generate-feed.ts && bun scripts/generate-sitemap.ts && bun scripts/generate-og.tsx && bun scripts/verify-feeds.ts",
     "preview": "vite preview --outDir build/client",
     "test": "playwright test",
     "test:ui": "playwright test --ui",

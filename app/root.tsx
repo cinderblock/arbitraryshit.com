@@ -44,6 +44,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         />
         <link
           rel="alternate"
+          type="application/atom+xml"
+          title="ArbitraryShit.com"
+          href="/atom.xml"
+        />
+        <link
+          rel="alternate"
           type="application/feed+json"
           title="ArbitraryShit.com"
           href="/feed.json"

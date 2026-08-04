@@ -213,6 +213,16 @@ a:focus-visible {
   color: var(--color-text-muted);
 }
 
+/* Subscribe link on a tag page, sized to sit inside the subtitle line. */
+.tag-feed-link {
+  font-size: 0.875em;
+}
+
+.subtitle .dot-sep {
+  margin: 0 0.5rem;
+  color: var(--color-text-muted);
+}
+
 /* Home */
 
 .intro-block {
