@@ -230,7 +230,20 @@ console probe ("Route error: Error"). Now 87/87 green all browsers. Pushed live 
    relocated — if Cameron wants it back, it needs a subdomain (a small,
    separate, consent-gated ops change). He has not asked for this.
 
-## OPEN — Cloudflare Pages stopped deploying (found 2026-08-04)
+## RESOLVED — Cloudflare Pages stopped deploying (2026-07-27 → fixed 2026-08-04)
+
+**Fixed and verified.** After saving the GitHub App repo selection, push
+`bf2fcfc` built and deployed (`build/active` → `deploy/success`). Verified
+live: all six feed endpoints serve real content types (not the SPA
+fallback), and the eight days of stuck content are current. One wrinkle
+worth remembering: immediately after the deploy the _new_ URLs still
+returned the cached `text/html` fallback that had been cached while they
+404'd; a cache-busting query proved the files were fine, and the stale
+entries cleared themselves within ~2 minutes.
+
+Historical detail below.
+
+## Cloudflare Pages stopped deploying — root cause (found 2026-08-04)
 
 **The live site is stale: last successful deploy was 2026-07-27 12:37 UTC
 (commit `10d0079`).** Everything since — the Jarlid "Update" note, the
