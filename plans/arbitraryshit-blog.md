@@ -284,6 +284,23 @@ now `cinderblock/arbitraryshit.com` + `cinderblock/svdsa.org`).
 Granting access does **not** retroactively build — a new push is required,
 which is what the commit carrying this note is for.
 
+**Re-granting access was NOT sufficient (verified 2026-08-04).** With
+`arbitraryshit.com` back in the selected list, a real test push (`65c7a63`)
+produced: no Cloudflare check-suite on the commit, and no new deployment
+(CF still shows 07-27). Additional checks ruled out the obvious suspects —
+Cloudflare's stored `repo_id: 1289554527` and `owner_id: 419955` match
+GitHub exactly, so it isn't a recreated/renamed repo, and the build config
+and branch are right.
+
+Remaining explanation: the Pages project is bound to a **stale GitHub App
+installation id** (what happens when the App is removed and reinstalled
+rather than edited — GitHub mints a new installation, existing projects keep
+pointing at the dead one). That binding is not exposed through the API, so
+it can't be confirmed or repaired from the CLI. Fix is in the dashboard:
+project → _Settings → Builds & deployments_ → reconnect/re-link the GitHub
+repository. `list-awesomeled-xyz` may well need the same treatment once its
+repo is re-added to the App.
+
 Blast radius across the account's other Pages projects (checked via API):
 
 | project                                                      | git source                      | effect                                                                                            |
