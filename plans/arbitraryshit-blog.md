@@ -49,7 +49,7 @@ Scaling invariant: every page view downloads O(1) data regardless of post count 
 - `app/posts/post-template/` — permanent draft: authoring template + dev-only test fixture for drafts/related/repo-card shorthand.
 - Syntax highlighting: `@shikijs/rehype` at MDX compile time (zero client JS)
 - Interactive elements: plain TSX components imported by the MDX, hydrated client-side
-- RSS: `scripts/generate-feed.ts` in `bun run build`, capped at 20 newest
+- Feeds (expanded 2026-08-04, a41d944): `scripts/generate-feed.ts` emits RSS 2.0 + Atom 1.0 + JSON Feed 1.1, site-wide (`/feed.xml`, `/atom.xml`, `/feed.json`) AND per tag (`/tags/<slug>/…` same three). Capped at 20 newest, drafts excluded; items carry tags as categories. Tag pages advertise their own feeds (meta in `tag.tsx`) plus a visible RSS link; site feeds advertised in `root.tsx`. `scripts/verify-feeds.ts` runs last in `bun run build` and fails it on malformed feeds/URLs or a tag page missing feed links — written after a `${SITE_URL}${dirPath}` concat bug produced `arbitraryshit.comtags/ai/feed.xml`; regression-tested by reintroducing the bug.
 - Future levers when home page HTML itself gets big (hundreds of posts): paginate home / add an archive page. Not needed yet.
 
 ## Plan / steps
