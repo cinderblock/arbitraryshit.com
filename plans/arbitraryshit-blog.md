@@ -230,6 +230,38 @@ console probe ("Route error: Error"). Now 87/87 green all browsers. Pushed live 
    relocated — if Cameron wants it back, it needs a subdomain (a small,
    separate, consent-gated ops change). He has not asked for this.
 
+## OPEN — Cloudflare Pages stopped deploying (found 2026-08-04)
+
+**The live site is stale: last successful deploy was 2026-07-27 12:37 UTC
+(commit `10d0079`).** Everything since — the Jarlid "Update" note, the
+PlugSight/tag/theme work committed after that, and the Atom + per-tag feeds
+(`a41d944`) — is pushed to GitHub but NOT live.
+
+Evidence:
+
+- The **"Cloudflare Workers and Pages" check-suite is entirely absent** from
+  every commit after `10d0079`; that commit has `Cloudflare Pages | success |
+2026-07-27T12:37:04Z`. Absence (not failure) means CF is never being told
+  about pushes / never starting a build — not a build error.
+- `GET /repos/cinderblock/arbitraryshit.com/deployments` returns empty.
+- GitHub Actions CI passes on the same commits and runs the identical
+  `bun run build`, so the build itself is fine.
+- The ops repo still declares the git-connected project
+  (`pages: {repo, production_branch: master, build_command, build_output_dir}`)
+  and the Cloudflare sync CI passes — so the project, domain, and DNS exist;
+  it's the build/git integration that's broken.
+- Nothing in ops explains it: the Web Analytics change was 07-24 (before the
+  last good deploy) and the 07-28 "moved to a dedicated account" commit is a
+  different site (svdsa).
+- Caveat: CF's SPA fallback returns **200 + text/html for any missing path**,
+  so status codes prove nothing — test for actual content when checking.
+
+Likely causes (need the Cloudflare dashboard, which is off-limits without
+Cameron's per-change authorization): the CF GitHub App lost access to the
+repo, the Pages project's git connection was removed, or builds are
+paused/quota-limited. Deploy hook for the project:
+`https://dash.cloudflare.com/?to=/c5987fbfdbb396ef3121459c26125cc0/pages/view/arbitraryshit-com`
+
 ## Things not to do
 
 - Don't push/commit the ops repo (shared working tree; per-change consent required).
