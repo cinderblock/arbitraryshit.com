@@ -256,10 +256,34 @@ Evidence:
 - Caveat: CF's SPA fallback returns **200 + text/html for any missing path**,
   so status codes prove nothing — test for actual content when checking.
 
-Likely causes (need the Cloudflare dashboard, which is off-limits without
-Cameron's per-change authorization): the CF GitHub App lost access to the
-repo, the Pages project's git connection was removed, or builds are
-paused/quota-limited. Deploy hook for the project:
+**Root cause narrowed 2026-08-04 via the Cloudflare API** (read-only, using
+the ops repo's `cloudflare/.env.local` token + `bunx wrangler`; Cameron asked
+for this check):
+
+- The Pages project config is **fine**: `source.type: github`,
+  `owner/repo: cinderblock/arbitraryshit.com`, `production_branch: master`,
+  `deployments_enabled: true`, `production_deployments_enabled: true`,
+  `build_config: {build_command: "bun run build", destination_dir: "build/client"}`.
+- The deployments list shows **zero attempts after `2026-07-27T12:36:14Z`**
+  (`10d0079`) — no failed builds, nothing queued. Every earlier push has a
+  `github:push` trigger and `deploy/success`.
+
+So Cloudflare is configured and willing; **GitHub simply stops notifying it
+of pushes.** The break is in the "Cloudflare Workers and Pages" GitHub App —
+its access to this repo. It broke between 07-27 12:36 and the next push
+(07-28 11:27); the 07-28 ops "moved to a dedicated account" commit came
+_after_ the first missed push, so it isn't the cause. 12 pushes have been
+silently skipped since.
+
+Fix (Cameron's to make — his GitHub account):
+<https://github.com/settings/installations> → **Cloudflare Workers and Pages**
+→ ensure repository access includes `arbitraryshit.com`. Re-granting should
+resume automatic deploys.
+
+Stopgap (needs per-change authorization; not done): `POST
+/accounts/{account}/pages/projects/arbitraryshit-com/deployments` with
+`branch=master` makes CF pull and build the latest commit immediately,
+bypassing the webhook. Project dashboard:
 `https://dash.cloudflare.com/?to=/c5987fbfdbb396ef3121459c26125cc0/pages/view/arbitraryshit-com`
 
 ## Things not to do
