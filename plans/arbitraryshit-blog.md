@@ -309,6 +309,33 @@ content indefinitely. When a Pages site looks "not updating", check
 attempt before assuming a build problem, and test page _content_ (CF's SPA
 fallback returns 200 + text/html for missing files, so status codes lie).
 
+### Guard against a repeat: deploy drift monitor (2026-08-04/05)
+
+So this can't recur silently:
+
+- **This repo** publishes `/build-info.json` (`scripts/generate-build-info.ts`,
+  in the `bun run build` chain) naming the commit the deployed site was built
+  from — `CF_PAGES_COMMIT_SHA` on Cloudflare, local git otherwise. A `kind`
+  field distinguishes it from the SPA-fallback HTML.
+- **The ops uptime worker** (`cloudflare/workers/uptime/src/deploy-drift.ts`,
+  ops `cbc8272` + `1e0b72e`) compares that against the repo's branch HEAD
+  hourly at :23. If the mismatch outlives a 45-minute grace period it pushes
+  "⚠️ Deploys stalled". Missing/unavailable data reports "unknown" and stays
+  silent; a new push restarts the grace clock; defaults to enabled.
+- **Reading HEAD does not use the GitHub API.** The worker has no
+  `GITHUB_TOKEN`, and unauthenticated api.github.com calls from Cloudflare's
+  shared egress IPs are rate-limited to uselessness — the monitor's first
+  deployed run logged "GitHub HEAD unavailable" for exactly that reason. It
+  now reads `github.com/OWNER/REPO.git/info/refs` (git smart-HTTP): no auth,
+  ~450 bytes, not API-rate-limited. **The existing build-failure monitor uses
+  the same unauthenticated API path and may be blind for the same reason —
+  worth checking.**
+- Known gap: a healthy run logs nothing, so "no log line" is the only
+  evidence the check is working. Adding a positive log for the current case
+  would make it verifiable at a glance.
+- Only `arbitraryshit.com` is watched. Adding another site = drop the same
+  build-info script in that repo, then one line in the worker's `deploySites`.
+
 Superseded intermediate finding, kept for the reasoning trail —
 **re-granting access appeared insufficient.** With
 `arbitraryshit.com` back in the selected list, a real test push (`65c7a63`)
