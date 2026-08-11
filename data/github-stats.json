@@ -1,38 +1,38 @@
 {
   "cinderblock/arbitraryshit.com": {
-    "fetchedAt": "2026-08-10",
+    "fetchedAt": "2026-08-11",
     "stars": 0,
     "openIssues": 0,
     "openPRs": 0,
     "contributors": 2,
     "defaultBranch": "master",
-    "headSha": "8651238ff1e649871cb55bb759efa98d865d1c36",
-    "lastPushed": "2026-08-09T09:56:00Z",
+    "headSha": "23a9a1bceab7279188bdbe198b9355b4d67bebd1",
+    "lastPushed": "2026-08-10T10:36:01Z",
     "latestVersion": null,
     "aheadBy": {
-      "58d917679392c9bf226407e19e41ca73bc5d0b49": 80
+      "58d917679392c9bf226407e19e41ca73bc5d0b49": 81
     }
   },
   "cinderblock/jarlid": {
-    "fetchedAt": "2026-08-10",
+    "fetchedAt": "2026-08-11",
     "stars": 0,
     "openIssues": 0,
     "openPRs": 0,
     "contributors": 1,
     "defaultBranch": "master",
-    "headSha": "5f55286d50e2224123e0d5a49f1a35ecb8ab1cc5",
-    "lastPushed": "2026-08-09T19:32:59Z",
+    "headSha": "2d10e8aee5250138b90c74d26d71ceb12452d925",
+    "lastPushed": "2026-08-11T00:46:34Z",
     "latestVersion": {
-      "tag": "v1.1.1",
-      "url": "https://github.com/cinderblock/jarlid/releases/tag/v1.1.1",
-      "publishedAt": "2026-08-09T19:41:15Z"
+      "tag": "v1.3.3",
+      "url": "https://github.com/cinderblock/jarlid/releases/tag/v1.3.3",
+      "publishedAt": "2026-08-11T00:26:04Z"
     },
     "aheadBy": {
-      "178a202c60bd8c809be0c0032aba61bf377c2d61": 71
+      "178a202c60bd8c809be0c0032aba61bf377c2d61": 88
     }
   },
   "cinderblock/plugsight": {
-    "fetchedAt": "2026-08-10",
+    "fetchedAt": "2026-08-11",
     "stars": 0,
     "openIssues": 0,
     "openPRs": 0,
