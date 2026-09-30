@@ -1,20 +1,20 @@
 {
   "cinderblock/arbitraryshit.com": {
-    "fetchedAt": "2026-09-29",
+    "fetchedAt": "2026-09-30",
     "stars": 0,
     "openIssues": 0,
     "openPRs": 0,
     "contributors": 2,
     "defaultBranch": "master",
-    "headSha": "3b597a6a7ba7561c5445164adbff48cf6cc51104",
-    "lastPushed": "2026-09-28T17:39:09Z",
+    "headSha": "8c276422a4e8e54b2108fc776194a7f43efb0d72",
+    "lastPushed": "2026-09-29T15:51:20Z",
     "latestVersion": null,
     "aheadBy": {
-      "58d917679392c9bf226407e19e41ca73bc5d0b49": 130
+      "58d917679392c9bf226407e19e41ca73bc5d0b49": 131
     }
   },
   "cinderblock/jarlid": {
-    "fetchedAt": "2026-09-29",
+    "fetchedAt": "2026-09-30",
     "stars": 0,
     "openIssues": 0,
     "openPRs": 0,
@@ -32,21 +32,21 @@
     }
   },
   "cinderblock/plugsight": {
-    "fetchedAt": "2026-09-29",
+    "fetchedAt": "2026-09-30",
     "stars": 1,
     "openIssues": 0,
     "openPRs": 0,
     "contributors": 1,
     "defaultBranch": "main",
-    "headSha": "fb7d49c9e722126cd2d2ec17ebd2bed3a744e956",
-    "lastPushed": "2026-09-29T00:54:23Z",
+    "headSha": "632dedc9d1f5416b9b6fe72a0da863a98f630b8c",
+    "lastPushed": "2026-09-30T02:11:29Z",
     "latestVersion": {
-      "tag": "v0.7.0",
-      "url": "https://github.com/cinderblock/plugsight/releases/tag/v0.7.0",
-      "publishedAt": "2026-09-29T01:12:15Z"
+      "tag": "v0.7.1",
+      "url": "https://github.com/cinderblock/plugsight/releases/tag/v0.7.1",
+      "publishedAt": "2026-09-30T02:10:49Z"
     },
     "aheadBy": {
-      "23b7fb9c4fdeceedeb1fe56b51e9e8293a15f9d6": 37
+      "23b7fb9c4fdeceedeb1fe56b51e9e8293a15f9d6": 44
     }
   }
 }
