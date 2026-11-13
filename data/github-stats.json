@@ -1,38 +1,38 @@
 {
   "cinderblock/arbitraryshit.com": {
-    "fetchedAt": "2026-11-12",
+    "fetchedAt": "2026-11-13",
     "stars": 0,
     "openIssues": 0,
     "openPRs": 0,
     "contributors": 2,
     "defaultBranch": "master",
-    "headSha": "fd0537f1424a4825bc1035d71542b23e7fbe6334",
-    "lastPushed": "2026-11-11T17:07:29Z",
+    "headSha": "812f43f9774d2e2a3ddc1292dfb78f8be951a67f",
+    "lastPushed": "2026-11-12T17:35:17Z",
     "latestVersion": null,
     "aheadBy": {
-      "58d917679392c9bf226407e19e41ca73bc5d0b49": 174
+      "58d917679392c9bf226407e19e41ca73bc5d0b49": 175
     }
   },
   "cinderblock/jarlid": {
-    "fetchedAt": "2026-11-12",
+    "fetchedAt": "2026-11-13",
     "stars": 0,
     "openIssues": 0,
     "openPRs": 0,
     "contributors": 1,
     "defaultBranch": "master",
-    "headSha": "b2b935dae15f28c6419ae2b9a99556cfcb699b62",
-    "lastPushed": "2026-11-12T05:17:21Z",
+    "headSha": "84ab50abbc4881850bb0b0098bcbd86d26db9158",
+    "lastPushed": "2026-11-13T16:15:32Z",
     "latestVersion": {
       "tag": "v1.23.0",
       "url": "https://github.com/cinderblock/jarlid/releases/tag/v1.23.0",
       "publishedAt": "2026-11-12T05:16:40Z"
     },
     "aheadBy": {
-      "178a202c60bd8c809be0c0032aba61bf377c2d61": 380
+      "178a202c60bd8c809be0c0032aba61bf377c2d61": 389
     }
   },
   "cinderblock/plugsight": {
-    "fetchedAt": "2026-11-12",
+    "fetchedAt": "2026-11-13",
     "stars": 1,
     "openIssues": 0,
     "openPRs": 0,
